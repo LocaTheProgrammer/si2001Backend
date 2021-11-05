@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import it.si2001.controller.UserRestController;
 import it.si2001.dao.UserRepository;
 import it.si2001.dto.Response;
 import it.si2001.dto.UserDTO;
@@ -16,6 +18,8 @@ import it.si2001.entity.User;
 @Service
 public class UserService {
 
+	private static Logger log = LoggerFactory.getLogger(UserRestController.class);
+	
 	private UserRepository userRepository;
 	
 	public UserService(UserRepository userRepository) {
@@ -126,26 +130,7 @@ public class UserService {
 
 	}
 
-	public Response<UserDTO> findUserByEmail(String email) {
-
-		Response<UserDTO> response = new Response<UserDTO>();
-
-		try {
-
-			User User = this.userRepository.findByEmail(email);
-
-			response.setResult(UserDTO.build(User));
-			response.setResultTest(true);
-
-		} catch (Exception e) {
-
-			response.setError(error);
-
-		}
-
-		return response;
-
-	}
+	
 
 	public boolean checkEmail(String email) {
 
@@ -181,15 +166,16 @@ public class UserService {
 	}
 
 	public Response<UserDTO> loginUser(String email, String password) {
-
+			
 		Response<UserDTO> response = new Response<UserDTO>();
 
 		try {
 
-			User User = this.userRepository.findByEmail(email);
-
-			if (User.getPassword().equals(password)) {
-				response.setResult(UserDTO.build(User));
+			User user = this.userRepository.findByEmail(email);
+			
+			log.info(password);
+			if (BCrypt.checkpw(password, user.getPassword())) { //non va
+				response.setResult(UserDTO.build(user));
 				response.setResultTest(true);
 			}
 

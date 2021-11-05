@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.si2001.dto.CredentialsDTO;
 import it.si2001.dto.Response;
 import it.si2001.dto.UserDTO;
 import it.si2001.service.UserService;
@@ -59,10 +60,10 @@ public class UserRestController {
 		return userService.findAllUsers();	
 	}
 	
-	@PostMapping(path="/logIn/{mail}/{password}")
-	public Response<?> signIn(@PathVariable String mail, @PathVariable String password){
+	@PostMapping(path="/logIn")
+	public Response<?> signIn(@RequestBody CredentialsDTO credentials){
 		
-		return userService.loginUser(mail, password);
+		return userService.loginUser(credentials.getMail(), credentials.getPassword());
 
 	}
 
