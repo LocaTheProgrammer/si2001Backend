@@ -18,7 +18,7 @@ import it.si2001.service.UserService;
 
 
 @RestController
-@RequestMapping("/rest/User")
+@RequestMapping("/rest/user")
 public class UserRestController {
 	
 	private UserService userService;
