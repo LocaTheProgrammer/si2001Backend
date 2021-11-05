@@ -42,5 +42,35 @@ public class CarService {
 		return res;
 		
 	}
+	
+	
+	public Response<CarDTO> findCarById(int id){
+		
+		Response<CarDTO> res=new Response<CarDTO>();
+		
+		try {
+			Car c=this.carRepository.findById(id).get();
+			res.setResult(CarDTO.build(c));
+			res.setResultTest(true);
+			
+		}catch(Exception e) {
+			res.setError("no car found for id: "+id);
+		}
+		
+		
+		return res;
+	}
+	
+	
+	public boolean deleteCarById(int id) {
+		
+		try {
+			this.carRepository.delete(this.carRepository.findById(id).get());
+			return true;
+		}catch(Exception e) {
+			return false;
+		}
+		
+	}
 
 }
