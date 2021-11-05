@@ -16,9 +16,12 @@ import it.si2001.entity.User;
 @Service
 public class UserService {
 
-	@Autowired
 	private UserRepository userRepository;
-
+	
+	public UserService(UserRepository userRepository) {
+		this.userRepository=userRepository;
+	}
+	
 	final static String error = "Nessun User trovato.";
 
 
