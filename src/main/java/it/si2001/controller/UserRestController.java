@@ -54,7 +54,7 @@ public class UserRestController {
 	
 	@GetMapping(path = "/findAll")
 	public Response<?> findAllArticoli() {
-		log.info("Ricevuta richiesta della lista di tutti gli articoli");
+		log.info("Ricevuta richiesta della lista di tutti gli user");
 		return userService.findAllUsers();	
 	}
 	
