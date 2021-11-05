@@ -2,6 +2,7 @@ package it.si2001.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,14 +35,14 @@ public class UserRestController {
 	}
 	
 	
-	@PostMapping(path="/delete")
-	public Response<?> deleteUser(@RequestBody int id){
+	@DeleteMapping(path="/delete/{id}")
+	public Response<?> deleteUser(@PathVariable int id){
 		log.info("Ricevuta richiesta della delete User");
 		return userService.deleteUserById(id);
 	}
 	
-	@PostMapping(path="/findById")
-	public Response<?> findUserById(@RequestBody int id){
+	@GetMapping(path="/findById/{id}")
+	public Response<?> findUserById(@PathVariable int id){
 		log.info("Ricevuta richiesta della delete User");
 		return userService.findUserById(id);
 	}
