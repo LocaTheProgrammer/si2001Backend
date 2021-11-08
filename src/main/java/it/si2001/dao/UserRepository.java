@@ -7,5 +7,5 @@ import it.si2001.entity.User;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer>{
-	public User findByEmail(String email);
+	User findByEmail(String email);
 }

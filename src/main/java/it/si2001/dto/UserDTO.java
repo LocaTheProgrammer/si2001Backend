@@ -13,6 +13,7 @@ public class UserDTO {
 	private String email;
 	private String password;
 	private String role;
+	private int id;
 	
 	public static UserDTO build(User u) {
 
@@ -22,6 +23,14 @@ public class UserDTO {
 		return result;
 	}
 
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getFirstName() {
 		return firstName;

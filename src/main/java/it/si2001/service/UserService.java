@@ -19,13 +19,13 @@ import it.si2001.entity.User;
 public class UserService {
 
 	private static Logger log = LoggerFactory.getLogger(UserRestController.class);
-	
+
 	private UserRepository userRepository;
-	
+
 	public UserService(UserRepository userRepository) {
 		this.userRepository=userRepository;
 	}
-	
+
 	final static String error = "Nessun User trovato.";
 
 
@@ -130,7 +130,7 @@ public class UserService {
 
 	}
 
-	
+
 
 	public boolean checkEmail(String email) {
 
@@ -165,23 +165,23 @@ public class UserService {
 
 	}
 
-	public Response<UserDTO> loginUser(String email, String password) {
-			
-		Response<UserDTO> response = new Response<UserDTO>();
+	public UserDTO loginUser(String email, String password) {
+
+		UserDTO response = new UserDTO();
 
 		try {
 
 			User user = this.userRepository.findByEmail(email);
-			
-			log.info(password);
+
+
 			if (BCrypt.checkpw(password, user.getPassword())) { //non va
-				response.setResult(UserDTO.build(user));
-				response.setResultTest(true);
+				response= UserDTO.build(user);
+				log.info(response.getFirstName());
 			}
 
 		} catch (Exception e) {
 
-			response.setError(error);
+			response=null;
 
 		}
 

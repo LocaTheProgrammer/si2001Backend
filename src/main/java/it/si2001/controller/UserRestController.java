@@ -1,5 +1,6 @@
 package it.si2001.controller;
 
+import it.si2001.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,9 +49,10 @@ public class UserRestController {
 		return userService.findUserById(id);
 	}
 	
-	@PutMapping(path="/update")
-	public Response<?> updateUser(@RequestBody UserDTO u){
+	@PutMapping(path="/update/{id}")
+	public Response<?> updateUser(@RequestBody UserDTO u, @PathVariable int id){
 		log.info("Ricevuta richiesta della update User");
+		u.setId(id);
 		return userService.updateUser(u);
 	}
 	
@@ -62,8 +64,11 @@ public class UserRestController {
 	
 	@PostMapping(path="/logIn")
 	public Response<?> signIn(@RequestBody CredentialsDTO credentials){
-		
-		return userService.loginUser(credentials.getMail(), credentials.getPassword());
+		log.info("richiesta di logIn");
+		UserDTO userDTO=userService.loginUser(credentials.getMail(), credentials.getPassword());
+		Response<UserDTO> response=new Response<>();
+		response.setResult(userDTO);
+		return response;
 
 	}
 
