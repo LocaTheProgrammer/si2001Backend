@@ -20,7 +20,7 @@ public class ReservationService {
     }
 
 
-    //todo testare bene che quel set car id mmmmboh
+
     public Response<ReservationDTO> createReservation(ReservationDTO reservationDTO){
 
         Reservation reservation = new Reservation();
