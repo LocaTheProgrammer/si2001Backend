@@ -3,6 +3,8 @@ package it.si2001.controller;
 import it.si2001.dto.ReservationDTO;
 import it.si2001.dto.Response;
 import it.si2001.service.ReservationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,10 +19,12 @@ public class ReservationRestController {
         this.reservationService=reservationService;
     }
 
+    private static Logger log = LoggerFactory.getLogger(ReservationRestController.class);
 
     @PostMapping(path = "/create")
-    public Response<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO){
-        return this.reservationService.createReservation(reservationDTO);
+    public Response<ReservationDTO> createReservation(@RequestBody ReservationDTO res){
+        log.info("reservation dto: "+ res.toString());
+        return this.reservationService.createReservation(res);
     }
 
     @GetMapping(path = "/findAllReservations")
@@ -35,7 +39,7 @@ public class ReservationRestController {
     }
 
     @GetMapping(path = "/getReservationById/{id}")
-    public Response<ReservationDTO> getReservationById(int id){
+    public Response<ReservationDTO> getReservationById(@PathVariable int id){
         return this.reservationService.getReservationById(id);
     }
 }

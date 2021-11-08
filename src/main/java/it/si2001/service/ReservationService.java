@@ -29,7 +29,7 @@ public class ReservationService {
 
         reservation.setReservationDate(reservationDTO.getReservationDate());
         reservation.setId(reservationDTO.getId());
-        reservation.setCarId(reservationDTO.getCarDTO().getId());
+        reservation.setCarId(reservationDTO.getId());
         reservation.setUserId(reservationDTO.getUserId());
 
         try{

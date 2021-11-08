@@ -8,7 +8,7 @@ public class ReservationDTO {
 
     private int id;
     private int userId;
-    private CarDTO car;
+    private int carId;
     private String reservationDate;
 
 
@@ -36,12 +36,12 @@ public class ReservationDTO {
         this.userId = userId;
     }
 
-    public CarDTO getCarDTO() {
-        return this.car;
+    public int getCarId() {
+        return this.carId;
     }
 
-    public void setCarDTO(CarDTO car) {
-        this.car = car;
+    public void setCarId(int carId) {
+        this.carId = carId;
     }
 
     public String getReservationDate() {
@@ -50,5 +50,11 @@ public class ReservationDTO {
 
     public void setReservationDate(String reservationDate) {
         this.reservationDate = reservationDate;
+    }
+
+
+    @Override
+    public String toString(){
+        return "id: "+getId()+" user id: "+getUserId()+" carDto: "+getCarId()+" res date: "+getReservationDate();
     }
 }

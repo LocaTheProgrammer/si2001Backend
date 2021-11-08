@@ -1,6 +1,5 @@
 package it.si2001.controller;
 
-import it.si2001.entity.Car;
 import org.springframework.web.bind.annotation.*;
 
 import it.si2001.dto.CarDTO;
@@ -18,7 +17,9 @@ public class CarRestController {
 	public CarRestController (CarService carService) {
 		this.carService=carService;
 	}
-	
+
+
+
 	@PostMapping(path="/create")
 	public Response<CarDTO> createCar(@RequestBody CarDTO car){
 		return this.carService.createCar(car);
@@ -37,7 +38,7 @@ public class CarRestController {
 		return this.carService.updateCar(carDTO);
 	}
 
-	@DeleteMapping(path="/deleteCar/{id}")
+	@DeleteMapping(path="/deleteCarById/{id}")
 	public boolean deleteCar(@PathVariable int id){
 		return this.carService.deleteCarById(id);
 	}
