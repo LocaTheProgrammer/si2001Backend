@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 
 import it.si2001.entity.Car;
 
+
 public class CarDTO {
 
 	private int id;
@@ -14,6 +15,34 @@ public class CarDTO {
 	private String displacement;
 	private String horsePower;
 	private String weightInLbs;
+	private String acceleration;
+	private String year;
+	private String origin;
+
+	public String getAcceleration() {
+		return acceleration;
+	}
+
+	public void setAcceleration(String acceleration) {
+		this.acceleration = acceleration;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+
 
 	
 	public static CarDTO build(Car c) {
@@ -81,5 +110,19 @@ public class CarDTO {
 		this.weightInLbs = weightInLbs;
 	}
 
-
+	@Override
+	public String toString() {
+		return "CarDTO{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", milesPerGallon='" + milesPerGallon + '\'' +
+				", cylinders='" + cylinders + '\'' +
+				", displacement='" + displacement + '\'' +
+				", horsePower='" + horsePower + '\'' +
+				", weightInLbs='" + weightInLbs + '\'' +
+				", acceleration='" + acceleration + '\'' +
+				", year='" + year + '\'' +
+				", origin='" + origin + '\'' +
+				'}';
+	}
 }

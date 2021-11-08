@@ -21,7 +21,7 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.cors().and()
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers().permitAll()//end point senza controllo di nessun tipo, quindi accessibile ad ogni client
@@ -32,13 +32,9 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 
-        registry.addMapping("/rest/carrelloTotale/**").allowedMethods("GET", "POST", "PUT", "DELETE");
-        registry.addMapping("/rest/utente/**").allowedMethods("GET", "POST", "PUT", "DELETE");
-        registry.addMapping("/rest/admin/**").allowedMethods("GET", "POST", "PUT", "DELETE");
-        registry.addMapping("/rest/carrello/**").allowedMethods("GET", "POST", "PUT", "DELETE");
-        registry.addMapping("/rest/articolo/**").allowedMethods("GET", "POST", "PUT", "DELETE");
-        registry.addMapping("/rest/spedizione/**").allowedMethods("GET", "POST", "PUT", "DELETE");
-        registry.addMapping("/rest/magazzino/**").allowedMethods("GET", "POST", "PUT", "DELETE");
+        registry.addMapping("/rest/car/**").allowedMethods("GET", "POST", "PUT", "DELETE");
+        registry.addMapping("/rest/user/**").allowedMethods("GET", "POST", "PUT", "DELETE");
+        registry.addMapping("/rest/reservation/**").allowedMethods("GET", "POST", "PUT", "DELETE");
     }
 
     @Bean

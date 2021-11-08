@@ -36,6 +36,39 @@ public class Car {
 	@Column(name = "weightInLbs")
 	private String weightInLbs;
 
+	@Column(name = "acceleration")
+	private String acceleration;
+
+	@Column(name = "year")
+	private String year;
+
+	public String getAcceleration() {
+		return acceleration;
+	}
+
+	public void setAcceleration(String acceleration) {
+		this.acceleration = acceleration;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+
+	@Column(name = "origin")
+	private String origin;
+
 
 
 	public int getId() {

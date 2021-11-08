@@ -1,5 +1,8 @@
 package it.si2001.service;
 
+import it.si2001.controller.CarRestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import it.si2001.dao.CarRepository;
@@ -19,7 +22,7 @@ public class CarService {
 	public CarService(CarRepository carRepository) {
 		this.carRepository = carRepository;
 	}
-
+	private static Logger log = LoggerFactory.getLogger(CarRestController.class);
 	public Response<CarDTO> createCar(CarDTO carDTO) {
 
 		Response<CarDTO> res = new Response<CarDTO>();
@@ -31,7 +34,9 @@ public class CarService {
 		car.setMilesPerGallon(carDTO.getMilesPerGallon());
 		car.setName(carDTO.getName());
 		car.setWeightInLbs(carDTO.getWeightInLbs());
-
+		car.setAcceleration(carDTO.getAcceleration());
+		car.setYear(carDTO.getYear());
+		car.setOrigin(carDTO.getOrigin());
 		try {
 			this.carRepository.save(car);
 			res.setResult(carDTO);
@@ -101,6 +106,17 @@ public class CarService {
 		if(carDTO.getWeightInLbs()!=null) {
 			car.setWeightInLbs(carDTO.getWeightInLbs());
 		}
+
+		if(carDTO.getAcceleration()!=null){
+			car.setAcceleration(carDTO.getAcceleration());
+		}
+		if(carDTO.getYear()!=null){
+			car.setYear(carDTO.getYear());
+		}
+		if(carDTO.getOrigin()!=null){
+			car.setOrigin(carDTO.getOrigin());
+		}
+
 		
 		
 		try {
