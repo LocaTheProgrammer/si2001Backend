@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EnableAutoConfiguration
 @EntityScan(basePackages = "it.si2001.entity")
 public class Si2001Application {
 

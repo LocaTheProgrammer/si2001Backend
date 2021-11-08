@@ -7,6 +7,10 @@ import it.si2001.dto.CarDTO;
 import it.si2001.dto.Response;
 import it.si2001.entity.Car;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 @Service
 public class CarService {
 
@@ -72,6 +76,10 @@ public class CarService {
 		Response<CarDTO> res = new Response<CarDTO>();
 		
 		Car car = new Car();
+
+
+		car.setId(carDTO.getId());
+
 		
 		if(carDTO.getCylinders()!=null) {
 			car.setCylinders(carDTO.getCylinders());
@@ -109,4 +117,26 @@ public class CarService {
 		return res;
 	}
 
+	public Response<List<CarDTO>> findAllCars() {
+
+		Response<List<CarDTO>> response = new Response<List<CarDTO>>();
+		List<CarDTO> result = new ArrayList<>();
+
+		Iterator<Car> iterator = this.carRepository.findAll().iterator();
+
+		while (iterator.hasNext()){
+			Car car=iterator.next();
+
+			result.add(CarDTO.build(car));
+		}
+
+		response.setResult(result);
+		if(result!=null){
+			response.setResultTest(true);
+		}else{
+			response.setResultTest(false);
+		}
+
+		return response;
+	}
 }

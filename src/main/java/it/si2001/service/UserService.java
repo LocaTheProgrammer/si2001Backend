@@ -90,8 +90,8 @@ public class UserService {
 
 			while (iterator.hasNext()) {
 
-				User User = iterator.next();
-				result.add(UserDTO.build(User));
+				User user = iterator.next();
+				result.add(UserDTO.build(user));
 
 			}
 
