@@ -64,5 +64,13 @@ public class ReservationRestController {
 
     }
 
+    @GetMapping(path="/findAllReservationAdmin")
+    public Response<List<ReservationTableDTO>> findReservationTable(){
+        Response<List<ReservationTableDTO>> response = new Response<>();
+
+        response.setResult(this.reservationService.findReservationTable());
+        return response;
+    }
+
 
 }

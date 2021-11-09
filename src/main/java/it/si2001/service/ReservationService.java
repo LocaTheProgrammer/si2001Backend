@@ -128,9 +128,6 @@ public class ReservationService {
             reservationTableDTO.setCar(carDTOListReserved.get(j));
             ret.add(reservationTableDTO);
         }
-
-
-
         return ret;
     }
 
@@ -146,6 +143,39 @@ public class ReservationService {
         ret.setReservationDate(r.getReservationDate());
         ret.setUserId(r.getUserId());
 
+        return ret;
+    }
+
+
+
+
+    public List<ReservationTableDTO> findReservationTable(){
+
+        List<ReservationTableDTO> ret = new ArrayList<>();
+        ReservationTableDTO reservationTableDTO= new ReservationTableDTO();
+        List<ReservationDTO>reservationDTO=new ArrayList<>();
+        Iterator<Reservation> iterator =this.reservationRepository.findAll().iterator();
+        List<CarDTO> carDTOListReserved=new ArrayList<>();
+
+        while (iterator.hasNext()){
+            Reservation r=iterator.next();
+            reservationDTO.add(ReservationDTO.build(r));
+        }
+        log.info("reservationDTO: "+ Arrays.toString(reservationDTO.toArray()));
+
+
+        for (int i=0; i<reservationDTO.size(); i++){
+            Car c= this.carRepository.findById(reservationDTO.get(i).getCarId()).get();
+            carDTOListReserved.add(CarDTO.build(c));
+        }
+
+        for (int j=0; j<reservationDTO.size(); j++){
+            reservationTableDTO.setReservationDate(reservationDTO.get(j).getReservationDate());
+            reservationTableDTO.setUserId(reservationDTO.get(j).getUserId());
+            reservationTableDTO.setId(reservationDTO.get(j).getId());
+            reservationTableDTO.setCar(carDTOListReserved.get(j));
+            ret.add(reservationTableDTO);
+        }
         return ret;
     }
 
