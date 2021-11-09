@@ -1,5 +1,7 @@
 package it.si2001.controller;
 
+import it.si2001.dto.NgbDateDTO;
+import it.si2001.dto.NgbDateRangeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +10,7 @@ import it.si2001.dto.CarDTO;
 import it.si2001.dto.Response;
 import it.si2001.service.CarService;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -50,6 +53,14 @@ public class CarRestController {
 	@DeleteMapping(path="/deleteCarById/{id}")
 	public boolean deleteCar(@PathVariable int id){
 		return this.carService.deleteCarById(id);
+	}
+
+	@PostMapping(path="/getFreeCarByReservationDate")
+	public Response<List<CarDTO>> getFreeCarByReservationDate(@RequestBody NgbDateRangeDTO ngbDateRange) throws ParseException {
+		log.info(ngbDateRange.toString());
+		Response<List<CarDTO>> response = new Response<>();
+		response.setResult(this.carService.getFreeCarByReservationDate(ngbDateRange.getStart(), ngbDateRange.getEnd()));
+		return response;
 	}
 
 }

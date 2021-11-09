@@ -22,213 +22,209 @@ import java.util.List;
 @Service
 public class CarService {
 
-	private CarRepository carRepository;
-	private ReservationService reservationService;
+    private CarRepository carRepository;
+    private ReservationService reservationService;
 
-	public CarService(CarRepository carRepository, ReservationService reservationService) {
-		this.carRepository = carRepository;
-		this.reservationService=reservationService;
-	}
-	private static Logger log = LoggerFactory.getLogger(CarRestController.class);
+    public CarService(CarRepository carRepository, ReservationService reservationService) {
+        this.carRepository = carRepository;
+        this.reservationService = reservationService;
+    }
 
-
-
-
-	public Response<CarDTO> createCar(CarDTO carDTO) {
-
-		Response<CarDTO> res = new Response<CarDTO>();
-
-		Car car = new Car();
-		car.setCylinders(carDTO.getCylinders());
-		car.setDisplacement(carDTO.getDisplacement());
-		car.setHorsePower(carDTO.getHorsePower());
-		car.setMilesPerGallon(carDTO.getMilesPerGallon());
-		car.setName(carDTO.getName());
-		car.setWeightInLbs(carDTO.getWeightInLbs());
-		car.setAcceleration(carDTO.getAcceleration());
-		car.setYear(carDTO.getYear());
-		car.setOrigin(carDTO.getOrigin());
-		try {
-			this.carRepository.save(car);
-			res.setResult(carDTO);
-			res.setResultTest(true);
-		} catch (Exception e) {
-			res.setError("car not saved");
-		}
-
-		return res;
-
-	}
-
-	public Response<CarDTO> findCarById(int id) {
-
-		Response<CarDTO> res = new Response<CarDTO>();
-
-		try {
-			Car c = this.carRepository.findById(id).get();
-			res.setResult(CarDTO.build(c));
-			res.setResultTest(true);
-
-		} catch (Exception e) {
-			res.setError("no car found for id: " + id);
-		}
-
-		return res;
-	}
-
-	public boolean deleteCarById(int id) {
-
-		try {
-			this.carRepository.delete(this.carRepository.findById(id).get());
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-
-	}
-
-	public Response<CarDTO> updateCar(CarDTO carDTO) {
-		
-		Response<CarDTO> res = new Response<CarDTO>();
-		
-		Car car = new Car();
+    private static Logger log = LoggerFactory.getLogger(CarRestController.class);
 
 
-		car.setId(carDTO.getId());
+    public Response<CarDTO> createCar(CarDTO carDTO) {
 
-		
-		if(carDTO.getCylinders()!=null) {
-			car.setCylinders(carDTO.getCylinders());
-		}
-		
-		if(carDTO.getDisplacement()!=null) {
-			car.setDisplacement(carDTO.getDisplacement());
-		}
-		
-		if(carDTO.getHorsePower()!=null) {
-			car.setHorsePower(carDTO.getHorsePower());
-		}
-		if(carDTO.getMilesPerGallon()!=null) {
-			car.setMilesPerGallon(carDTO.getMilesPerGallon());
-		}
-		if(carDTO.getName()!=null) {
-			car.setName(carDTO.getName());
-		}
-		if(carDTO.getWeightInLbs()!=null) {
-			car.setWeightInLbs(carDTO.getWeightInLbs());
-		}
+        Response<CarDTO> res = new Response<CarDTO>();
 
-		if(carDTO.getAcceleration()!=null){
-			car.setAcceleration(carDTO.getAcceleration());
-		}
-		if(carDTO.getYear()!=null){
-			car.setYear(carDTO.getYear());
-		}
-		if(carDTO.getOrigin()!=null){
-			car.setOrigin(carDTO.getOrigin());
-		}
+        Car car = new Car();
+        car.setCylinders(carDTO.getCylinders());
+        car.setDisplacement(carDTO.getDisplacement());
+        car.setHorsePower(carDTO.getHorsePower());
+        car.setMilesPerGallon(carDTO.getMilesPerGallon());
+        car.setName(carDTO.getName());
+        car.setWeightInLbs(carDTO.getWeightInLbs());
+        car.setAcceleration(carDTO.getAcceleration());
+        car.setYear(carDTO.getYear());
+        car.setOrigin(carDTO.getOrigin());
+        try {
+            this.carRepository.save(car);
+            res.setResult(carDTO);
+            res.setResultTest(true);
+        } catch (Exception e) {
+            res.setError("car not saved");
+        }
 
-		
-		
-		try {
-			this.carRepository.save(car);
-			
-			res.setResult(carDTO);
-			res.setResultTest(true);
-			
-		}catch(Exception e) {
-			res.setError("car not updated");
-			res.setResultTest(false);
-		}
-		
-		return res;
-	}
+        return res;
 
-	public List<CarDTO> findAllCars() {
+    }
 
+    public Response<CarDTO> findCarById(int id) {
 
-		List<CarDTO> result = new ArrayList<>();
+        Response<CarDTO> res = new Response<CarDTO>();
 
-		Iterator<Car> iterator = this.carRepository.findAll().iterator();
+        try {
+            Car c = this.carRepository.findById(id).get();
+            res.setResult(CarDTO.build(c));
+            res.setResultTest(true);
 
-		while (iterator.hasNext()){
-			Car car=iterator.next();
+        } catch (Exception e) {
+            res.setError("no car found for id: " + id);
+        }
 
-			result.add(CarDTO.build(car));
-		}
+        return res;
+    }
+
+    public boolean deleteCarById(int id) {
+
+        try {
+            this.carRepository.delete(this.carRepository.findById(id).get());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
+    public Response<CarDTO> updateCar(CarDTO carDTO) {
+
+        Response<CarDTO> res = new Response<CarDTO>();
+
+        Car car = new Car();
 
 
-		if(result!=null){
-			return result;
-		}else{
-			return null;
-		}
+        car.setId(carDTO.getId());
 
 
-	}
+        if (carDTO.getCylinders() != null) {
+            car.setCylinders(carDTO.getCylinders());
+        }
+
+        if (carDTO.getDisplacement() != null) {
+            car.setDisplacement(carDTO.getDisplacement());
+        }
+
+        if (carDTO.getHorsePower() != null) {
+            car.setHorsePower(carDTO.getHorsePower());
+        }
+        if (carDTO.getMilesPerGallon() != null) {
+            car.setMilesPerGallon(carDTO.getMilesPerGallon());
+        }
+        if (carDTO.getName() != null) {
+            car.setName(carDTO.getName());
+        }
+        if (carDTO.getWeightInLbs() != null) {
+            car.setWeightInLbs(carDTO.getWeightInLbs());
+        }
+
+        if (carDTO.getAcceleration() != null) {
+            car.setAcceleration(carDTO.getAcceleration());
+        }
+        if (carDTO.getYear() != null) {
+            car.setYear(carDTO.getYear());
+        }
+        if (carDTO.getOrigin() != null) {
+            car.setOrigin(carDTO.getOrigin());
+        }
 
 
-	public List<CarDTO> getFreeCarByReservationDate(NgbDateDTO fromDate, NgbDateDTO toDate){
+        try {
+            this.carRepository.save(car);
 
-		List<ReservationDTO> reservationDTOList= this.reservationService.findAllReservations();
-		List<CarDTO> carDTOList= this.findAllCars();
-		List<CarDTO> availableCarList=new ArrayList<>();
-		boolean isCarBusy=false;
-		List<Integer> busyCarsId=new ArrayList<>();
+            res.setResult(carDTO);
+            res.setResultTest(true);
 
-		String dateFromS=fromDate.getDay()+"/"+fromDate.getMonth()+"/"+ fromDate.getYear();
-		String dateToS=toDate.getDay()+"/"+toDate.getMonth()+"/"+ toDate.getYear();
+        } catch (Exception e) {
+            res.setError("car not updated");
+            res.setResultTest(false);
+        }
 
-		String pattern = "yyyy-MM-dd";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		String dateToCheckString="";
-		Date from= new Date();
-		Date to=new Date();
-		Date dateToCheck= new Date();
+        return res;
+    }
+
+    public List<CarDTO> findAllCars() {
 
 
-		try {
-			from = simpleDateFormat.parse(dateFromS);
-		} catch (ParseException e) {
-			log.error("error in parsing date From");
-			e.printStackTrace();
-		}
+        List<CarDTO> result = new ArrayList<>();
+
+        Iterator<Car> iterator = this.carRepository.findAll().iterator();
+
+        while (iterator.hasNext()) {
+            Car car = iterator.next();
+
+            result.add(CarDTO.build(car));
+        }
 
 
-		try {
-			 to = simpleDateFormat.parse(dateToS);
-		} catch (ParseException e) {
-			log.error("error in parsing date To");
-			e.printStackTrace();
-		}
+        if (result != null) {
+            return result;
+        } else {
+            return null;
+        }
 
 
-		for (int i=0; i<reservationDTOList.size();i++){
-			dateToCheckString=reservationDTOList.get(i).getReservationDate();
-			try {
-				dateToCheck= simpleDateFormat.parse(dateToCheckString);
-			} catch (ParseException e) {
-				log.error("error in parsing dateToCheck");
-				e.printStackTrace();
-			}
+    }
 
-			if(dateToCheck.after(from)&&dateToCheck.before(to)){
-				busyCarsId.add(reservationDTOList.get(i).getCarId());
-			}
-		}
 
-		for (int i=0; i<carDTOList.size();i++){
-			for(int j=0; j<busyCarsId.size();j++){
-				if(carDTOList.get(i).getId()==busyCarsId.get(j)){
-					isCarBusy=true;
-				}
-				if(!isCarBusy){
-					availableCarList.add(carDTOList.get(i));
-				}
-				isCarBusy=false;
-			}
-		}
+    public List<CarDTO> getFreeCarByReservationDate(NgbDateDTO fromDate, NgbDateDTO toDate) throws ParseException {
 
-		return availableCarList;
-	}
+        List<ReservationDTO> reservationDTOList = this.reservationService.findAllReservations();
+        List<CarDTO> carDTOList = this.findAllCars();
+        if (reservationDTOList.size() == 0) {
+            return carDTOList;
+        } else {
+            List<CarDTO> availableCarList = new ArrayList<>();
+            List<Integer> busyCarsId = new ArrayList<>();
+
+            String dateFromS = fromDate.getYear() + "/" + fromDate.getMonth() + "/" + fromDate.getDay();
+            String dateToS = toDate.getYear() + "/" + toDate.getMonth() + "/" + toDate.getDay();
+
+            String pattern = "yyyy/MM/dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            Date from = new Date();
+            Date to = new Date();
+
+
+            try {
+                from = simpleDateFormat.parse(dateFromS);
+            } catch (ParseException e) {
+                log.error("error in parsing date From");
+                e.printStackTrace();
+            }
+
+
+            try {
+                to = simpleDateFormat.parse(dateToS);
+            } catch (ParseException e) {
+                log.error("error in parsing date To");
+                e.printStackTrace();
+            }
+
+
+            boolean isDataValid = false;
+            for (int i = 0; i < reservationDTOList.size(); i++) {
+                String date[] = reservationDTOList.get(i).getReservationDate().split("/");
+                int month = Integer.parseInt(date[1]) + 1;
+                String formattedDateString = date[2] + "/" + month + "/" + date[0];
+                Date dateToCheck = simpleDateFormat.parse(formattedDateString);
+                if (dateToCheck.after(from) && dateToCheck.before(to)) {
+                    busyCarsId.add(reservationDTOList.get(i).getCarId());
+                }
+            }
+
+
+            for (int i = 1; i < carDTOList.size(); i++) {
+                for (int j = 0; j < busyCarsId.size(); j++) {
+                    if (carDTOList.get(i).getId() != busyCarsId.get(j)) {
+                        availableCarList.add(carDTOList.get(i));
+                        break;
+                    }
+                }
+            }
+
+            return availableCarList;
+        }
+    }
+
+
 }
