@@ -1,6 +1,8 @@
 package it.si2001.service;
 
 import it.si2001.controller.CarRestController;
+import it.si2001.dto.NgbDateDTO;
+import it.si2001.dto.ReservationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,10 @@ import it.si2001.dto.CarDTO;
 import it.si2001.dto.Response;
 import it.si2001.entity.Car;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,11 +23,17 @@ import java.util.List;
 public class CarService {
 
 	private CarRepository carRepository;
+	private ReservationService reservationService;
 
-	public CarService(CarRepository carRepository) {
+	public CarService(CarRepository carRepository, ReservationService reservationService) {
 		this.carRepository = carRepository;
+		this.reservationService=reservationService;
 	}
 	private static Logger log = LoggerFactory.getLogger(CarRestController.class);
+
+
+
+
 	public Response<CarDTO> createCar(CarDTO carDTO) {
 
 		Response<CarDTO> res = new Response<CarDTO>();
@@ -133,9 +144,9 @@ public class CarService {
 		return res;
 	}
 
-	public Response<List<CarDTO>> findAllCars() {
+	public List<CarDTO> findAllCars() {
 
-		Response<List<CarDTO>> response = new Response<List<CarDTO>>();
+
 		List<CarDTO> result = new ArrayList<>();
 
 		Iterator<Car> iterator = this.carRepository.findAll().iterator();
@@ -146,13 +157,78 @@ public class CarService {
 			result.add(CarDTO.build(car));
 		}
 
-		response.setResult(result);
+
 		if(result!=null){
-			response.setResultTest(true);
+			return result;
 		}else{
-			response.setResultTest(false);
+			return null;
 		}
 
-		return response;
+
+	}
+
+
+	public List<CarDTO> getFreeCarByReservationDate(NgbDateDTO fromDate, NgbDateDTO toDate){
+
+		List<ReservationDTO> reservationDTOList= this.reservationService.findAllReservations();
+		List<CarDTO> carDTOList= this.findAllCars();
+		List<CarDTO> availableCarList=new ArrayList<>();
+		boolean isCarBusy=false;
+		List<Integer> busyCarsId=new ArrayList<>();
+
+		String dateFromS=fromDate.getDay()+"/"+fromDate.getMonth()+"/"+ fromDate.getYear();
+		String dateToS=toDate.getDay()+"/"+toDate.getMonth()+"/"+ toDate.getYear();
+
+		String pattern = "yyyy-MM-dd";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String dateToCheckString="";
+		Date from= new Date();
+		Date to=new Date();
+		Date dateToCheck= new Date();
+
+
+		try {
+			from = simpleDateFormat.parse(dateFromS);
+		} catch (ParseException e) {
+			log.error("error in parsing date From");
+			e.printStackTrace();
+		}
+
+
+		try {
+			 to = simpleDateFormat.parse(dateToS);
+		} catch (ParseException e) {
+			log.error("error in parsing date To");
+			e.printStackTrace();
+		}
+
+
+		for (int i=0; i<reservationDTOList.size();i++){
+			dateToCheckString=reservationDTOList.get(i).getReservationDate();
+			try {
+				dateToCheck= simpleDateFormat.parse(dateToCheckString);
+			} catch (ParseException e) {
+				log.error("error in parsing dateToCheck");
+				e.printStackTrace();
+			}
+
+			if(dateToCheck.after(from)&&dateToCheck.before(to)){
+				busyCarsId.add(reservationDTOList.get(i).getCarId());
+			}
+		}
+
+		for (int i=0; i<carDTOList.size();i++){
+			for(int j=0; j<busyCarsId.size();j++){
+				if(carDTOList.get(i).getId()==busyCarsId.get(j)){
+					isCarBusy=true;
+				}
+				if(!isCarBusy){
+					availableCarList.add(carDTOList.get(i));
+				}
+				isCarBusy=false;
+			}
+		}
+
+		return availableCarList;
 	}
 }

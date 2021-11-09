@@ -55,6 +55,6 @@ public class ReservationDTO {
 
     @Override
     public String toString(){
-        return "id: "+getId()+" user id: "+getUserId()+" carDto: "+getCarId()+" res date: "+getReservationDate();
+        return "id: "+getId()+" user id: "+getUserId()+" car id: "+getCarId()+" res date: "+getReservationDate();
     }
 }

@@ -43,7 +43,7 @@ public class ReservationService {
         return response;
     }
 
-    public Response<List<ReservationDTO>> findAllReservations(){
+    public List<ReservationDTO> findAllReservations(){
 
         Response<List<ReservationDTO>> response=new Response<>();
         List<ReservationDTO> result = new ArrayList<>();
@@ -61,7 +61,7 @@ public class ReservationService {
         }else{
             response.setResultTest(false);
         }
-        return response;
+        return result;
     }
 
     public boolean deleteReservationById(int id){

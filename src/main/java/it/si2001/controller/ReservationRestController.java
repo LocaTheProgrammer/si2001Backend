@@ -23,13 +23,17 @@ public class ReservationRestController {
 
     @PostMapping(path = "/create")
     public Response<ReservationDTO> createReservation(@RequestBody ReservationDTO res){
-        log.info("reservation dto: "+ res.toString());
+        log.info("ricevuta richiesta creazione prenotazione");
         return this.reservationService.createReservation(res);
     }
 
     @GetMapping(path = "/findAllReservations")
     public Response<List<ReservationDTO>> findAllReservations(){
-        return this.reservationService.findAllReservations();
+
+        List<ReservationDTO> list=this.reservationService.findAllReservations();
+        Response<List<ReservationDTO>> response=new Response<>();
+        response.setResult(list);
+        return response;
     }
 
 

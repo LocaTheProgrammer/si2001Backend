@@ -32,7 +32,9 @@ public class CarRestController {
 	@GetMapping(path="/findAll")
 	public Response<List<CarDTO>> createCar(){
 		log.info("received find all request");
-		return this.carService.findAllCars();}
+		Response<List<CarDTO>> response =new Response<>();
+		response.setResult(this.carService.findAllCars());
+		return response;}
 
 	@GetMapping(path = "/findCarById/{id}")
 	public Response<CarDTO> findCarById(@PathVariable int id){
