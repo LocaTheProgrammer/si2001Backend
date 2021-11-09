@@ -201,7 +201,6 @@ public class CarService {
             }
 
 
-            boolean isDataValid = false;
             for (int i = 0; i < reservationDTOList.size(); i++) {
                 String date[] = reservationDTOList.get(i).getReservationDate().split("/");
                 int month = Integer.parseInt(date[1]) + 1;

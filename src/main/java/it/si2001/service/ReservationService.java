@@ -1,12 +1,20 @@
 package it.si2001.service;
 
+import it.si2001.controller.CarRestController;
+import it.si2001.dao.CarRepository;
 import it.si2001.dao.ReservationRepository;
+import it.si2001.dto.CarDTO;
 import it.si2001.dto.ReservationDTO;
+import it.si2001.dto.ReservationTableDTO;
 import it.si2001.dto.Response;
+import it.si2001.entity.Car;
 import it.si2001.entity.Reservation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,10 +22,14 @@ import java.util.List;
 public class ReservationService {
 
     private ReservationRepository reservationRepository;
+    private CarRepository carRepository;
 
-    public ReservationService (ReservationRepository reservationRepository){
+    public ReservationService (ReservationRepository reservationRepository, CarRepository carRepository){
         this.reservationRepository=reservationRepository;
+        this.carRepository=carRepository;
     }
+
+    private static Logger log = LoggerFactory.getLogger(ReservationService.class);
 
 
 
@@ -88,5 +100,53 @@ public class ReservationService {
         return res;
     }
 
+
+    public List<ReservationTableDTO> findReservationByUserId(int userId){
+
+        List<ReservationTableDTO> ret = new ArrayList<>();
+        ReservationTableDTO reservationTableDTO= new ReservationTableDTO();
+        List<ReservationDTO>reservationDTO=new ArrayList<>();
+        Iterator<Reservation> iterator =this.reservationRepository.findByUserId(userId).iterator();
+        List<CarDTO> carDTOListReserved=new ArrayList<>();
+
+        while (iterator.hasNext()){
+            Reservation r=iterator.next();
+            reservationDTO.add(ReservationDTO.build(r));
+        }
+        log.info("reservationDTO: "+ Arrays.toString(reservationDTO.toArray()));
+
+
+        for (int i=0; i<reservationDTO.size(); i++){
+            Car c= this.carRepository.findById(reservationDTO.get(i).getCarId()).get();
+            carDTOListReserved.add(CarDTO.build(c));
+        }
+
+        for (int j=0; j<reservationDTO.size(); j++){
+            reservationTableDTO.setReservationDate(reservationDTO.get(j).getReservationDate());
+            reservationTableDTO.setUserId(reservationDTO.get(j).getUserId());
+            reservationTableDTO.setId(reservationDTO.get(j).getId());
+            reservationTableDTO.setCar(carDTOListReserved.get(j));
+            ret.add(reservationTableDTO);
+        }
+
+
+
+        return ret;
+    }
+
+
+    public ReservationTableDTO findCarByReservationId(int id){
+        Reservation r=this.reservationRepository.findById(id).get();
+        Car c=this.carRepository.findById(r.getCarId()).get();
+        CarDTO carDTO=CarDTO.build(c);
+        ReservationTableDTO ret= new ReservationTableDTO();
+
+        ret.setId(r.getId());
+        ret.setCar(carDTO);
+        ret.setReservationDate(r.getReservationDate());
+        ret.setUserId(r.getUserId());
+
+        return ret;
+    }
 
 }

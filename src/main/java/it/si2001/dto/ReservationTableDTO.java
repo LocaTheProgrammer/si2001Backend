@@ -1,25 +1,23 @@
-package it.si2001.entity;
+package it.si2001.dto;
 
-import javax.persistence.*;
+import it.si2001.entity.Reservation;
+import org.springframework.beans.BeanUtils;
 
-@Entity
-@Table(name = "reservation")
-public class Reservation {
+public class ReservationTableDTO {
 
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(name = "userId")
     private int userId;
-
-    @Column(name = "carId")
-    private int carId;
-
-    @Column(name = "reservationDate")
+    private CarDTO car;
     private String reservationDate;
+
+
+    public static ReservationDTO build(Reservation r){
+        ReservationDTO result = new ReservationDTO();
+        BeanUtils.copyProperties(r, result);
+
+        return result;
+    }
+
 
     public int getId() {
         return id;
@@ -37,14 +35,6 @@ public class Reservation {
         this.userId = userId;
     }
 
-    public int getCarId() {
-        return carId;
-    }
-
-    public void setCarId(int carId) {
-        this.carId = carId;
-    }
-
     public String getReservationDate() {
         return reservationDate;
     }
@@ -54,12 +44,20 @@ public class Reservation {
     }
 
 
+    public CarDTO getCar() {
+        return car;
+    }
+
+    public void setCar(CarDTO car) {
+        this.car = car;
+    }
+
     @Override
     public String toString() {
-        return "Reservation{" +
+        return "ReservationTableDTO{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", carId=" + carId +
+                ", car=" + car +
                 ", reservationDate='" + reservationDate + '\'' +
                 '}';
     }

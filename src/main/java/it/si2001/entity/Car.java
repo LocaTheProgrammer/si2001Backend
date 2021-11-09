@@ -126,4 +126,20 @@ public class Car {
 	public void setWeightInLbs(String weightInLbs) {
 		this.weightInLbs = weightInLbs;
 	}
+
+	@Override
+	public String toString() {
+		return "Car{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", milesPerGallon='" + milesPerGallon + '\'' +
+				", cylinders='" + cylinders + '\'' +
+				", displacement='" + displacement + '\'' +
+				", horsePower='" + horsePower + '\'' +
+				", weightInLbs='" + weightInLbs + '\'' +
+				", acceleration='" + acceleration + '\'' +
+				", year='" + year + '\'' +
+				", origin='" + origin + '\'' +
+				'}';
+	}
 }

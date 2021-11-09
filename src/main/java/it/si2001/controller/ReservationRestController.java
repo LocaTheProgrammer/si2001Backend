@@ -1,6 +1,7 @@
 package it.si2001.controller;
 
 import it.si2001.dto.ReservationDTO;
+import it.si2001.dto.ReservationTableDTO;
 import it.si2001.dto.Response;
 import it.si2001.service.ReservationService;
 import org.slf4j.Logger;
@@ -45,6 +46,22 @@ public class ReservationRestController {
     @GetMapping(path = "/getReservationById/{id}")
     public Response<ReservationDTO> getReservationById(@PathVariable int id){
         return this.reservationService.getReservationById(id);
+    }
+
+    @GetMapping(path="/getReservationTableByUserId/{id}")
+    public Response<List<ReservationTableDTO>> geReservationTableByUserId(@PathVariable int id){
+        Response<List<ReservationTableDTO>> response = new Response<>();
+        response.setResult(this.reservationService.findReservationByUserId(id));
+        return response;
+    }
+
+    @GetMapping(path="/getReservationDetailsByReservationId/{id}")
+    public  Response<ReservationTableDTO> getReservationDetailsByReservationId(@PathVariable int id){
+        Response<ReservationTableDTO> response = new Response<>();
+
+        response.setResult(this.reservationService.findCarByReservationId(id));
+        return response;
+
     }
 
 
