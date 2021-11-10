@@ -1,41 +1,39 @@
 package it.si2001.service;
 
 import it.si2001.controller.CarRestController;
+import it.si2001.dao.CarRepository;
+import it.si2001.dto.CarDTO;
 import it.si2001.dto.NgbDateDTO;
 import it.si2001.dto.ReservationDTO;
+import it.si2001.dto.Response;
+import it.si2001.entity.Car;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import it.si2001.dao.CarRepository;
-import it.si2001.dto.CarDTO;
-import it.si2001.dto.Response;
-import it.si2001.entity.Car;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
 public class CarService {
 
-    private CarRepository carRepository;
-    private ReservationService reservationService;
+    private final CarRepository carRepository;
+    private final ReservationService reservationService;
 
     public CarService(CarRepository carRepository, ReservationService reservationService) {
         this.carRepository = carRepository;
         this.reservationService = reservationService;
     }
 
-    private static Logger log = LoggerFactory.getLogger(CarRestController.class);
+    private static final Logger log = LoggerFactory.getLogger(CarRestController.class);
 
 
     public Response<CarDTO> createCar(CarDTO carDTO) {
 
-        Response<CarDTO> res = new Response<CarDTO>();
+        Response<CarDTO> res = new Response<>();
 
         Car car = new Car();
         car.setCylinders(carDTO.getCylinders());
@@ -61,7 +59,7 @@ public class CarService {
 
     public Response<CarDTO> findCarById(int id) {
 
-        Response<CarDTO> res = new Response<CarDTO>();
+        Response<CarDTO> res = new Response<>();
 
         try {
             Car c = this.carRepository.findById(id).get();
@@ -88,7 +86,7 @@ public class CarService {
 
     public Response<CarDTO> updateCar(CarDTO carDTO) {
 
-        Response<CarDTO> res = new Response<CarDTO>();
+        Response<CarDTO> res = new Response<>();
 
         Car car = new Car();
 
@@ -147,11 +145,7 @@ public class CarService {
 
         List<CarDTO> result = new ArrayList<>();
 
-        Iterator<Car> iterator = this.carRepository.findAll().iterator();
-
-        while (iterator.hasNext()) {
-            Car car = iterator.next();
-
+        for (Car car : this.carRepository.findAll()) {
             result.add(CarDTO.build(car));
         }
 
@@ -202,11 +196,11 @@ public class CarService {
 
 
             for (int i = 0; i < reservationDTOList.size(); i++) {
-                String date[] = reservationDTOList.get(i).getReservationDate().split("/");
-                int month = Integer.parseInt(date[1]) + 1;
-                String formattedDateString = date[2] + "/" + month + "/" + date[0];
-                Date dateToCheck = simpleDateFormat.parse(formattedDateString);
-                if (dateToCheck.after(from) && dateToCheck.before(to)) {
+
+                Date dateFromToCheck = getDateToCheck(reservationDTOList.get(i).getFromDate().toString().split("/"),simpleDateFormat);
+                Date dateToToCheck = getDateToCheck(reservationDTOList.get(i).getToDate().toString().split("/"), simpleDateFormat);
+
+                if (dateFromToCheck.after(from) && dateToToCheck.before(to)) {
                     busyCarsId.add(reservationDTOList.get(i).getCarId());
                 }
             }
@@ -223,6 +217,13 @@ public class CarService {
 
             return availableCarList;
         }
+    }
+
+
+    private Date getDateToCheck(String[] date, SimpleDateFormat simpleDateFormat) throws ParseException {
+        int month = Integer.parseInt(date[1]) + 1;
+        String formattedDateFromString = date[2] + "/" + month + "/" + date[0];
+        return simpleDateFormat.parse(formattedDateFromString);
     }
 
 
