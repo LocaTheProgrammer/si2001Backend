@@ -152,8 +152,9 @@ public class ReservationService {
         log.info("reservationDTO: "+ Arrays.toString(reservationDTO.toArray()));
 
 
-        for (int i=0; i<reservationDTO.size(); i++){
-            Car c= this.carRepository.findById(reservationDTO.get(i).getCarId()).get();
+        for (ReservationDTO dto : reservationDTO) {
+            Car c;
+            c = this.carRepository.findById(dto.getCarId()).get();
             carDTOListReserved.add(CarDTO.build(c));
         }
 
