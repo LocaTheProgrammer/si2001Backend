@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -169,9 +170,10 @@ public class CarService {
         } else {
             List<CarDTO> availableCarList = new ArrayList<>();
             List<Integer> busyCarsId = new ArrayList<>();
-
-            String dateFromS = fromDate.getYear() + "/" + fromDate.getMonth() + "/" + fromDate.getDay();
-            String dateToS = toDate.getYear() + "/" + toDate.getMonth() + "/" + toDate.getDay();
+            int fromMonth=fromDate.getMonth()-1;
+            int toMonth=toDate.getMonth()-1;
+            String dateFromS = fromDate.getYear() + "/" + fromMonth + "/" + fromDate.getDay();
+            String dateToS = toDate.getYear() + "/" + toMonth + "/" + toDate.getDay();
 
             String pattern = "yyyy/MM/dd";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -181,6 +183,7 @@ public class CarService {
 
             try {
                 from = simpleDateFormat.parse(dateFromS);
+                log.info("from: "+from);
             } catch (ParseException e) {
                 log.error("error in parsing date From");
                 e.printStackTrace();
@@ -189,18 +192,37 @@ public class CarService {
 
             try {
                 to = simpleDateFormat.parse(dateToS);
+                log.info("to: "+to);
             } catch (ParseException e) {
                 log.error("error in parsing date To");
                 e.printStackTrace();
             }
 
 
-            for (int i = 0; i < reservationDTOList.size(); i++) {
+            for (int i = 1; i < reservationDTOList.size(); i++) {
+                String[] fromDateArray=reservationDTOList.get(i).getFromDate().toString().substring(0,10).split("-");
+                String[] toDateArray=reservationDTOList.get(i).getToDate().toString().substring(0,10).split("-");
 
-                Date dateFromToCheck = getDateToCheck(reservationDTOList.get(i).getFromDate().toString().split("/"),simpleDateFormat);
-                Date dateToToCheck = getDateToCheck(reservationDTOList.get(i).getToDate().toString().split("/"), simpleDateFormat);
+                Date reservationDateFromToCheck = getDateToCheck(fromDateArray,simpleDateFormat);
+                Date reservationDateToToCheck = getDateToCheck(toDateArray, simpleDateFormat);
 
-                if (dateFromToCheck.after(from) && dateToToCheck.before(to)) {
+                log.info("reservationDateFromToCheck: "+reservationDateFromToCheck);
+                log.info("reservationDateToToCheck: "+reservationDateToToCheck);
+
+                log.info("from: "+from);
+                log.info("to: "+to);
+                boolean isDateAfterValid=from.after(reservationDateFromToCheck)||from.compareTo(reservationDateFromToCheck)==0;
+                boolean isDateToVaild=to.before(reservationDateToToCheck)||reservationDateToToCheck.equals(to);
+
+
+                boolean isDateValid=isDateAfterValid||isDateToVaild;
+
+                log.info("isDateAfterValid? "+isDateAfterValid);
+                log.info("isDateToVaild? "+isDateToVaild);
+                log.info("isDateValid? "+isDateValid);
+
+                if (isDateValid) {
+                    log.info("car id reserved for id: "+reservationDTOList.get(i).getCarId());
                     busyCarsId.add(reservationDTOList.get(i).getCarId());
                 }
             }
@@ -221,8 +243,8 @@ public class CarService {
 
 
     private Date getDateToCheck(String[] date, SimpleDateFormat simpleDateFormat) throws ParseException {
-        int month = Integer.parseInt(date[1]) + 1;
-        String formattedDateFromString = date[2] + "/" + month + "/" + date[0];
+        int month = Integer.parseInt(date[1]);
+        String formattedDateFromString = date[0] + "/" + month + "/" + date[2];
         return simpleDateFormat.parse(formattedDateFromString);
     }
 

@@ -41,7 +41,7 @@ public class ReservationService {
         reservation.setFromDate(reservationDTO.getFromDate());
         reservation.setToDate(reservationDTO.getToDate());
         reservation.setId(reservationDTO.getId());
-        reservation.setCarId(reservationDTO.getId());
+        reservation.setCarId(reservationDTO.getCarId());
         reservation.setUserId(reservationDTO.getUserId());
 
         try{
