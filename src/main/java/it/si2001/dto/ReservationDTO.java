@@ -4,12 +4,15 @@ package it.si2001.dto;
 import it.si2001.entity.Reservation;
 import org.springframework.beans.BeanUtils;
 
+import java.util.Date;
+
 public class ReservationDTO {
 
     private int id;
     private int userId;
     private int carId;
-    private String reservationDate;
+    private Date fromDate;
+    private Date toDate;
 
 
     public static ReservationDTO build(Reservation r){
@@ -44,17 +47,31 @@ public class ReservationDTO {
         this.carId = carId;
     }
 
-    public String getReservationDate() {
-        return reservationDate;
+
+    public Date getFromDate() {
+        return fromDate;
     }
 
-    public void setReservationDate(String reservationDate) {
-        this.reservationDate = reservationDate;
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
     }
 
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
 
     @Override
-    public String toString(){
-        return "id: "+getId()+" user id: "+getUserId()+" car id: "+getCarId()+" res date: "+getReservationDate();
+    public String toString() {
+        return "ReservationDTO{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", carId=" + carId +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
+                '}';
     }
 }

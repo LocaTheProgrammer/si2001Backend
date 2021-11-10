@@ -1,6 +1,7 @@
 package it.si2001.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "reservation")
@@ -18,8 +19,11 @@ public class Reservation {
     @Column(name = "carId")
     private int carId;
 
-    @Column(name = "reservationDate")
-    private String reservationDate;
+    @Column(name = "fromDate")
+    private Date fromDate;
+
+    @Column(name="toDate")
+    private Date toDate;
 
     public int getId() {
         return id;
@@ -45,14 +49,21 @@ public class Reservation {
         this.carId = carId;
     }
 
-    public String getReservationDate() {
-        return reservationDate;
+    public Date getFromDate() {
+        return fromDate;
     }
 
-    public void setReservationDate(String reservationDate) {
-        this.reservationDate = reservationDate;
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
     }
 
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
 
     @Override
     public String toString() {
@@ -60,7 +71,8 @@ public class Reservation {
                 "id=" + id +
                 ", userId=" + userId +
                 ", carId=" + carId +
-                ", reservationDate='" + reservationDate + '\'' +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
                 '}';
     }
 }

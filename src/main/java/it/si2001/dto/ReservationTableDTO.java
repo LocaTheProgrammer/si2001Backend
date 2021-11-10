@@ -3,12 +3,15 @@ package it.si2001.dto;
 import it.si2001.entity.Reservation;
 import org.springframework.beans.BeanUtils;
 
+import java.util.Date;
+
 public class ReservationTableDTO {
 
     private int id;
     private int userId;
     private CarDTO car;
-    private String reservationDate;
+    private Date fromDate;
+    private Date toDate;
 
 
     public static ReservationDTO build(Reservation r){
@@ -35,14 +38,21 @@ public class ReservationTableDTO {
         this.userId = userId;
     }
 
-    public String getReservationDate() {
-        return reservationDate;
+    public Date getFromDate() {
+        return fromDate;
     }
 
-    public void setReservationDate(String reservationDate) {
-        this.reservationDate = reservationDate;
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
     }
 
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
 
     public CarDTO getCar() {
         return car;
@@ -58,7 +68,8 @@ public class ReservationTableDTO {
                 "id=" + id +
                 ", userId=" + userId +
                 ", car=" + car +
-                ", reservationDate='" + reservationDate + '\'' +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
                 '}';
     }
 }
