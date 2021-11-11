@@ -192,7 +192,7 @@ public class UserService {
 	// update User
 	public Response<UserDTO> updateUser(UserDTO u) {
 
-		Response<UserDTO> response = new Response<UserDTO>();
+		Response<UserDTO> response = new Response<>();
 		try {
 			User user = this.userRepository.findByEmail(u.getEmail());
 

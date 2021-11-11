@@ -49,10 +49,9 @@ public class UserRestController {
 		return userService.findUserById(id);
 	}
 	
-	@PutMapping(path="/update/{id}")
-	public Response<?> updateUser(@RequestBody UserDTO u, @PathVariable int id){
+	@PutMapping(path="/update")
+	public Response<?> updateUser(@RequestBody UserDTO u){
 		log.info("Ricevuta richiesta della update User");
-		u.setId(id);
 		return userService.updateUser(u);
 	}
 	
