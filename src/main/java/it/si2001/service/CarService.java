@@ -64,13 +64,15 @@ public class CarService {
         return res;
     }
 
-    public boolean deleteCarById(int id) {
-
+    public Response<Boolean> deleteCarById(int id) {
+        Response<Boolean> res =new Response<>();
         try {
             this.carRepository.delete(this.carRepository.findById(id).get());
-            return true;
+            res.setResult(true);
+            return res;
         } catch (Exception e) {
-            return false;
+            res.setResult(false);
+            return res;
         }
 
     }
@@ -79,10 +81,9 @@ public class CarService {
 
         Response<CarDTO> res = new Response<>();
 
-        Car car = new Car();
+        Car car =  this.carRepository.findById(carDTO.getId()).get();
 
 
-        car.setId(carDTO.getId());
 
 
         if (carDTO.getCylinders() != null) {
@@ -117,6 +118,7 @@ public class CarService {
         }
 
 
+        log.info("updating car: "+car.toString());
         try {
             this.carRepository.save(car);
 
@@ -124,6 +126,7 @@ public class CarService {
             res.setResultTest(true);
 
         } catch (Exception e) {
+            res.setResult(null);
             res.setError("car not updated");
             res.setResultTest(false);
         }

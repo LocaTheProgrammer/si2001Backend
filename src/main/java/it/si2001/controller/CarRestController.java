@@ -44,14 +44,14 @@ public class CarRestController {
 		return this.carService.findCarById(id);
 	}
 
-	@PutMapping(path="/updateCar/{id}")
-	public Response<CarDTO> updateCar(@RequestBody CarDTO carDTO, @PathVariable int id) throws ParseException {
-		carDTO.setId(id);
+	@PutMapping(path="/updateCar")
+	public Response<CarDTO> updateCar(@RequestBody CarDTO carDTO) throws ParseException {
+		log.info("car dto: "+carDTO);
 		return this.carService.updateCar(carDTO);
 	}
 
 	@DeleteMapping(path="/deleteCarById/{id}")
-	public boolean deleteCar(@PathVariable int id){
+	public Response<Boolean> deleteCar(@PathVariable int id){
 		return this.carService.deleteCarById(id);
 	}
 
