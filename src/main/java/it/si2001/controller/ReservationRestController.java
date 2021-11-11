@@ -51,6 +51,7 @@ public class ReservationRestController {
     @GetMapping(path="/getReservationTableByUserId/{id}")
     public Response<List<ReservationTableDTO>> geReservationTableByUserId(@PathVariable int id){
         Response<List<ReservationTableDTO>> response = new Response<>();
+        log.info("getReservationTableByUserId request");
         response.setResult(this.reservationService.findReservationByUserId(id));
         return response;
     }

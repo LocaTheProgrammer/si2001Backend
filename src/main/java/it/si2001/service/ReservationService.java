@@ -1,13 +1,13 @@
 package it.si2001.service;
 
+import it.si2001.converter.EntityDTOConverter;
 import it.si2001.dao.CarRepository;
 import it.si2001.dao.ReservationRepository;
-import it.si2001.dto.CarDTO;
-import it.si2001.dto.ReservationDTO;
-import it.si2001.dto.ReservationTableDTO;
-import it.si2001.dto.Response;
+import it.si2001.dao.UserRepository;
+import it.si2001.dto.*;
 import it.si2001.entity.Car;
 import it.si2001.entity.Reservation;
+import it.si2001.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,10 +22,15 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final CarRepository carRepository;
+    private final UserRepository userRepository;
+    private EntityDTOConverter entityDTOConverter;
 
-    public ReservationService (ReservationRepository reservationRepository, CarRepository carRepository){
+
+    public ReservationService (ReservationRepository reservationRepository, CarRepository carRepository, UserRepository userRepository, EntityDTOConverter entityDTOConverter){
         this.reservationRepository=reservationRepository;
         this.carRepository=carRepository;
+        this.userRepository=userRepository;
+        this.entityDTOConverter = entityDTOConverter;
     }
 
     private static final Logger log = LoggerFactory.getLogger(ReservationService.class);
@@ -37,12 +42,7 @@ public class ReservationService {
         Reservation reservation = new Reservation();
         Response<ReservationDTO> response = new Response<>();
 
-
-        reservation.setFromDate(reservationDTO.getFromDate());
-        reservation.setToDate(reservationDTO.getToDate());
-        reservation.setId(reservationDTO.getId());
-        reservation.setCarId(reservationDTO.getCarId());
-        reservation.setUserId(reservationDTO.getUserId());
+        reservation=this.entityDTOConverter.reservationDtoToReservationEntity(reservationDTO);
 
         try{
             this.reservationRepository.save(reservation);
@@ -99,31 +99,28 @@ public class ReservationService {
     }
 
 
+    //todo da riscrivere tutto
     public List<ReservationTableDTO> findReservationByUserId(int userId){
 
         List<ReservationDTO>reservationDTO=new ArrayList<>();
-        Iterator<Reservation> iterator =this.reservationRepository.findByUserId(userId).iterator();
-        List<CarDTO> carDTOListReserved=new ArrayList<>();
+        List<Reservation> reservationList =this.reservationRepository.findByUserId(userId);
+        User u = this.userRepository.findById(userId).get();
+        UserDTO userDTO=UserDTO.build(u);
 
-        while (iterator.hasNext()){
-            Reservation r=iterator.next();
-            reservationDTO.add(ReservationDTO.build(r));
-        }
-        log.info("reservationDTO: "+ Arrays.toString(reservationDTO.toArray()));
+       for (int i=0; i<reservationList.size();i++){
+           reservationList.get(i).setUser(u);
+
+       }
 
 
-        for (ReservationDTO dto : reservationDTO) {
-            Car c = this.carRepository.findById(dto.getCarId()).get();
-            carDTOListReserved.add(CarDTO.build(c));
-        }
 
-        return  getReservationTableDTOList(reservationDTO, carDTOListReserved);
+        return null;//todo da cambiare
     }
 
 
     public ReservationTableDTO findCarByReservationId(int id){
         Reservation r=this.reservationRepository.findById(id).get();
-        Car c=this.carRepository.findById(r.getCarId()).get();
+        Car c=this.carRepository.findById(r.getCar().getId()).get();
         CarDTO carDTO=CarDTO.build(c);
         ReservationTableDTO ret= new ReservationTableDTO();
 
@@ -131,7 +128,7 @@ public class ReservationService {
         ret.setCar(carDTO);
         ret.setFromDate(r.getFromDate());
         ret.setToDate(r.getToDate());
-        ret.setUserId(r.getUserId());
+        ret.setUserId(1);
 
         return ret;
     }
@@ -165,6 +162,7 @@ public class ReservationService {
     private List<ReservationTableDTO> getReservationTableDTOList(List<ReservationDTO>reservationDTO, List<CarDTO> carDTOListReserved){
         List<ReservationTableDTO> ret = new ArrayList<>();
         ReservationTableDTO reservationTableDTO= new ReservationTableDTO();
+        log.info(Arrays.toString(carDTOListReserved.toArray()));
         for (int j=0; j<reservationDTO.size(); j++){
             reservationTableDTO.setFromDate(reservationDTO.get(j).getFromDate());
             reservationTableDTO.setToDate(reservationDTO.get(j).getToDate());

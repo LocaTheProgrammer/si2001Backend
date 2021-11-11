@@ -114,6 +114,9 @@
 			<artifactId>java-jwt</artifactId>
 			<version>3.18.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+
+
 	</dependencies>
 
 	<build>

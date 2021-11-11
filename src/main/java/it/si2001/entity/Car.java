@@ -1,145 +1,153 @@
 package it.si2001.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Data;
+
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "car")
 public class Car {
-	
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 
-	@Column(name = "name")
-	private String name;
-	
-	@Column(name = "milesPerGallon")
-	private String milesPerGallon;
-	
-	@Column(name = "cylinders")
-	private String cylinders;
-	
-	@Column(name = "displacement")
-	private String displacement;
-	
-	@Column(name = "horsePower")
-	private String horsePower;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name = "weightInLbs")
-	private String weightInLbs;
+    @Column(name = "name")
+    private String name;
 
-	@Column(name = "acceleration")
-	private String acceleration;
+    @Column(name = "milesPerGallon")
+    private String milesPerGallon;
 
-	@Column(name = "year")
-	private String year;
+    @Column(name = "cylinders")
+    private String cylinders;
 
-	public String getAcceleration() {
-		return acceleration;
-	}
+    @Column(name = "displacement")
+    private String displacement;
 
-	public void setAcceleration(String acceleration) {
-		this.acceleration = acceleration;
-	}
+    @Column(name = "horsePower")
+    private String horsePower;
 
-	public String getYear() {
-		return year;
-	}
+    @Column(name = "weightInLbs")
+    private String weightInLbs;
 
-	public void setYear(String year) {
-		this.year = year;
-	}
+    @Column(name = "acceleration")
+    private String acceleration;
 
-	public String getOrigin() {
-		return origin;
-	}
+    @Column(name = "year")
+    private Date year;
 
-	public void setOrigin(String origin) {
-		this.origin = origin;
-	}
-
-	@Column(name = "origin")
-	private String origin;
+    @Column(name = "origin")
+    private String origin;
 
 
+    @OneToMany(mappedBy = "car",  orphanRemoval = true) //cascade = CascadeType.REMOVE v
+    List<Reservation> reservationList;
 
-	public int getId() {
-		return id;
-	}
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getAcceleration() {
+        return acceleration;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setAcceleration(String acceleration) {
+        this.acceleration = acceleration;
+    }
 
-	public String getMilesPerGallon() {
-		return milesPerGallon;
-	}
+    public Date getYear() {
+        return year;
+    }
 
-	public void setMilesPerGallon(String milesPerGallon) {
-		this.milesPerGallon = milesPerGallon;
-	}
+    public void setYear(Date year) {
+        this.year = year;
+    }
 
-	public String getCylinders() {
-		return cylinders;
-	}
+    public String getOrigin() {
+        return origin;
+    }
 
-	public void setCylinders(String cylinders) {
-		this.cylinders = cylinders;
-	}
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
 
-	public String getDisplacement() {
-		return displacement;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setDisplacement(String displacement) {
-		this.displacement = displacement;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getHorsePower() {
-		return horsePower;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setHorsePower(String horsePower) {
-		this.horsePower = horsePower;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getWeightInLbs() {
-		return weightInLbs;
-	}
+    public String getMilesPerGallon() {
+        return milesPerGallon;
+    }
 
-	public void setWeightInLbs(String weightInLbs) {
-		this.weightInLbs = weightInLbs;
-	}
+    public void setMilesPerGallon(String milesPerGallon) {
+        this.milesPerGallon = milesPerGallon;
+    }
 
-	@Override
-	public String toString() {
-		return "Car{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				", milesPerGallon='" + milesPerGallon + '\'' +
-				", cylinders='" + cylinders + '\'' +
-				", displacement='" + displacement + '\'' +
-				", horsePower='" + horsePower + '\'' +
-				", weightInLbs='" + weightInLbs + '\'' +
-				", acceleration='" + acceleration + '\'' +
-				", year='" + year + '\'' +
-				", origin='" + origin + '\'' +
-				'}';
-	}
+    public String getCylinders() {
+        return cylinders;
+    }
+
+    public void setCylinders(String cylinders) {
+        this.cylinders = cylinders;
+    }
+
+    public String getDisplacement() {
+        return displacement;
+    }
+
+    public void setDisplacement(String displacement) {
+        this.displacement = displacement;
+    }
+
+    public String getHorsePower() {
+        return horsePower;
+    }
+
+    public void setHorsePower(String horsePower) {
+        this.horsePower = horsePower;
+    }
+
+    public String getWeightInLbs() {
+        return weightInLbs;
+    }
+
+    public void setWeightInLbs(String weightInLbs) {
+        this.weightInLbs = weightInLbs;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", milesPerGallon='" + milesPerGallon + '\'' +
+                ", cylinders='" + cylinders + '\'' +
+                ", displacement='" + displacement + '\'' +
+                ", horsePower='" + horsePower + '\'' +
+                ", weightInLbs='" + weightInLbs + '\'' +
+                ", acceleration='" + acceleration + '\'' +
+                ", year='" + year + '\'' +
+                ", origin='" + origin + '\'' +
+                '}';
+    }
 }

@@ -1,13 +1,7 @@
 package it.si2001.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import lombok.Data;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -33,6 +27,17 @@ public class User {
 	
 	@Column(name="role")
 	private String role;
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true) //per rimuovere la prenotazione in caso l'utente fosse eliminato -!- chiedere a manuel differenza cascade = CascadeType.REMOVE,
+	List<Reservation> reservationList;
+
+	public List<Reservation> getReservationList() {
+		return reservationList;
+	}
+
+	public void setReservationList(List<Reservation> reservationList) {
+		this.reservationList = reservationList;
+	}
 
 	public int getId() {
 		return id;
@@ -80,5 +85,18 @@ public class User {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", role='" + role + '\'' +
+//				", reservationList=" + reservationList +
+				'}';
 	}
 }

@@ -1,5 +1,9 @@
 package it.si2001.configuration;
 
+import it.si2001.converter.EntityDTOConverter;
+import it.si2001.dao.CarRepository;
+import it.si2001.dao.ReservationRepository;
+import it.si2001.dao.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,4 +48,9 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
         return authenticationManager();
     }
 
+
+    @Bean
+    public EntityDTOConverter entityDTOConverter(UserRepository userRepository, CarRepository carRepository, ReservationRepository reservationRepository){
+        return new EntityDTOConverter(userRepository, carRepository, reservationRepository);
+    }
 }

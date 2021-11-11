@@ -14,6 +14,8 @@ public class UserDTO {
 	private String password;
 	private String role;
 	private int id;
+
+//	private int idReservationList;
 	
 	public static UserDTO build(User u) {
 
@@ -21,15 +23,6 @@ public class UserDTO {
 		BeanUtils.copyProperties(u, result);
 
 		return result;
-	}
-
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getFirstName() {
@@ -70,5 +63,34 @@ public class UserDTO {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+//	public int getIdReservationList() {
+//		return idReservationList;
+//	}
+//
+//	public void setIdReservationList(int idReservationList) {
+//		this.idReservationList = idReservationList;
+//	}
+
+	@Override
+	public String toString() {
+		return "UserDTO{" +
+				"firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", role='" + role + '\'' +
+				", id=" + id +
+//				", idReservationList=" + idReservationList +
+				'}';
 	}
 }

@@ -1,6 +1,5 @@
 package it.si2001.dto;
 
-
 import it.si2001.entity.Reservation;
 import org.springframework.beans.BeanUtils;
 
@@ -22,7 +21,6 @@ public class ReservationDTO {
         return result;
     }
 
-
     public int getId() {
         return id;
     }
@@ -40,13 +38,12 @@ public class ReservationDTO {
     }
 
     public int getCarId() {
-        return this.carId;
+        return carId;
     }
 
     public void setCarId(int carId) {
         this.carId = carId;
     }
-
 
     public Date getFromDate() {
         return fromDate;
@@ -63,6 +60,7 @@ public class ReservationDTO {
     public void setToDate(Date toDate) {
         this.toDate = toDate;
     }
+
 
     @Override
     public String toString() {

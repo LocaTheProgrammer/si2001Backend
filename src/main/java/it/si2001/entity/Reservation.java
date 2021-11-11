@@ -1,6 +1,8 @@
 package it.si2001.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,11 +17,14 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "userId")
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    //@NotFound(action = NotFoundAction.IGNORE) per non tirare un'eccezione ne caso la relazione non esista "opzionale"
+    private User user;
 
-    @Column(name = "carId")
-    private int carId;
+    @ManyToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
 
     @Column(name = "fromDate")
     private Date fromDate;
@@ -35,20 +40,20 @@ public class Reservation {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getCarId() {
-        return carId;
+    public Car getCar() {
+        return car;
     }
 
-    public void setCarId(int carId) {
-        this.carId = carId;
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     public Date getFromDate() {
@@ -71,8 +76,8 @@ public class Reservation {
     public String toString() {
         return "Reservation{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", carId=" + carId +
+                ", userId=" + user +
+                ", car=" + car +
                 ", fromDate=" + fromDate +
                 ", toDate=" + toDate +
                 '}';

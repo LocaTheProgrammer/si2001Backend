@@ -1,58 +1,48 @@
 package it.si2001.service;
 
 import it.si2001.controller.CarRestController;
+import it.si2001.converter.EntityDTOConverter;
 import it.si2001.dao.CarRepository;
+import it.si2001.dao.ReservationRepository;
 import it.si2001.dto.CarDTO;
 import it.si2001.dto.NgbDateDTO;
 import it.si2001.dto.ReservationDTO;
 import it.si2001.dto.Response;
 import it.si2001.entity.Car;
+import it.si2001.entity.Reservation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CarService {
 
     private final CarRepository carRepository;
-    private final ReservationService reservationService;
+    private final ReservationRepository reservationRepository;
+    private EntityDTOConverter entityDTOConverter;
 
-    public CarService(CarRepository carRepository, ReservationService reservationService) {
+    public CarService(CarRepository carRepository, ReservationRepository reservationRepository, EntityDTOConverter entityDTOConverter) {
         this.carRepository = carRepository;
-        this.reservationService = reservationService;
+        this.reservationRepository = reservationRepository;
+        this.entityDTOConverter=entityDTOConverter;
     }
 
     private static final Logger log = LoggerFactory.getLogger(CarRestController.class);
 
 
-    public Response<CarDTO> createCar(CarDTO carDTO) {
+    public Response<CarDTO> createCar(CarDTO carDTO) throws ParseException {
 
         Response<CarDTO> res = new Response<>();
 
-        Car car = new Car();
-        car.setCylinders(carDTO.getCylinders());
-        car.setDisplacement(carDTO.getDisplacement());
-        car.setHorsePower(carDTO.getHorsePower());
-        car.setMilesPerGallon(carDTO.getMilesPerGallon());
-        car.setName(carDTO.getName());
-        car.setWeightInLbs(carDTO.getWeightInLbs());
-        car.setAcceleration(carDTO.getAcceleration());
-        car.setYear(carDTO.getYear());
-        car.setOrigin(carDTO.getOrigin());
-        try {
-            this.carRepository.save(car);
-            res.setResult(carDTO);
-            res.setResultTest(true);
-        } catch (Exception e) {
-            res.setError("car not saved");
-        }
+        Car car = this.entityDTOConverter.carDtoToCarEntity(carDTO);
+
+        this.carRepository.save(car);
+        res.setResult(carDTO);
+        res.setResultTest(true);
 
         return res;
 
@@ -85,7 +75,7 @@ public class CarService {
 
     }
 
-    public Response<CarDTO> updateCar(CarDTO carDTO) {
+    public Response<CarDTO> updateCar(CarDTO carDTO) throws ParseException {
 
         Response<CarDTO> res = new Response<>();
 
@@ -120,7 +110,7 @@ public class CarService {
             car.setAcceleration(carDTO.getAcceleration());
         }
         if (carDTO.getYear() != null) {
-            car.setYear(carDTO.getYear());
+            car.setYear(this.entityDTOConverter.simpleDateFormat.parse(carDTO.getYear()));
         }
         if (carDTO.getOrigin() != null) {
             car.setOrigin(carDTO.getOrigin());
@@ -163,15 +153,15 @@ public class CarService {
 
     public List<CarDTO> getFreeCarByReservationDate(NgbDateDTO fromDate, NgbDateDTO toDate) throws ParseException {
 
-        List<ReservationDTO> reservationDTOList = this.reservationService.findAllReservations();
+        List<ReservationDTO> reservationDTOList = new ArrayList<>();
+
         List<CarDTO> carDTOList = this.findAllCars();
         if (reservationDTOList.size() == 0) {
             return carDTOList;
         } else {
             List<CarDTO> availableCarList = new ArrayList<>();
-            List<Integer> busyCarsId = new ArrayList<>();
-            int fromMonth=fromDate.getMonth()-1;
-            int toMonth=toDate.getMonth()-1;
+            int fromMonth = fromDate.getMonth() - 1;
+            int toMonth = toDate.getMonth() - 1;
             String dateFromS = fromDate.getYear() + "/" + fromMonth + "/" + fromDate.getDay();
             String dateToS = toDate.getYear() + "/" + toMonth + "/" + toDate.getDay();
 
@@ -183,7 +173,7 @@ public class CarService {
 
             try {
                 from = simpleDateFormat.parse(dateFromS);
-                log.info("from: "+from);
+                log.info("from: " + from);
             } catch (ParseException e) {
                 log.error("error in parsing date From");
                 e.printStackTrace();
@@ -192,51 +182,15 @@ public class CarService {
 
             try {
                 to = simpleDateFormat.parse(dateToS);
-                log.info("to: "+to);
+                log.info("to: " + to);
             } catch (ParseException e) {
                 log.error("error in parsing date To");
                 e.printStackTrace();
             }
 
-
-            for (int i = 1; i < reservationDTOList.size(); i++) {
-                String[] fromDateArray=reservationDTOList.get(i).getFromDate().toString().substring(0,10).split("-");
-                String[] toDateArray=reservationDTOList.get(i).getToDate().toString().substring(0,10).split("-");
-
-                Date reservationDateFromToCheck = getDateToCheck(fromDateArray,simpleDateFormat);
-                Date reservationDateToToCheck = getDateToCheck(toDateArray, simpleDateFormat);
-
-                log.info("reservationDateFromToCheck: "+reservationDateFromToCheck);
-                log.info("reservationDateToToCheck: "+reservationDateToToCheck);
-
-                log.info("from: "+from);
-                log.info("to: "+to);
-                boolean isDateAfterValid=from.after(reservationDateFromToCheck)||from.compareTo(reservationDateFromToCheck)==0;
-                boolean isDateToVaild=to.before(reservationDateToToCheck)||reservationDateToToCheck.equals(to);
-
-
-                boolean isDateValid=isDateAfterValid||isDateToVaild;
-
-                log.info("isDateAfterValid? "+isDateAfterValid);
-                log.info("isDateToVaild? "+isDateToVaild);
-                log.info("isDateValid? "+isDateValid);
-
-                if (isDateValid) {
-                    log.info("car id reserved for id: "+reservationDTOList.get(i).getCarId());
-                    busyCarsId.add(reservationDTOList.get(i).getCarId());
-                }
-            }
-
-
-            for (int i = 1; i < carDTOList.size(); i++) {
-                for (int j = 0; j < busyCarsId.size(); j++) {
-                    if (carDTOList.get(i).getId() != busyCarsId.get(j)) {
-                        availableCarList.add(carDTOList.get(i));
-                        break;
-                    }
-                }
-            }
-
+//            List<Reservation>reservationList=this.reservationRepository.findByToDateBeforeAndFromDateAfter(to,from);
+            List<Reservation> reservationList = this.reservationRepository.findAll();
+            log.info("sasd");
             return availableCarList;
         }
     }

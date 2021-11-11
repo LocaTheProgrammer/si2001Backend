@@ -27,7 +27,7 @@ public class CarRestController {
 	private static Logger log = LoggerFactory.getLogger(CarRestController.class);
 
 	@PostMapping(path="/create")
-	public Response<CarDTO> createCar(@RequestBody CarDTO car){
+	public Response<CarDTO> createCar(@RequestBody CarDTO car) throws ParseException {
 		log.info(car.toString());
 		return this.carService.createCar(car);
 	}
@@ -45,7 +45,7 @@ public class CarRestController {
 	}
 
 	@PutMapping(path="/updateCar/{id}")
-	public Response<CarDTO> updateCar(@RequestBody CarDTO carDTO, @PathVariable int id){
+	public Response<CarDTO> updateCar(@RequestBody CarDTO carDTO, @PathVariable int id) throws ParseException {
 		carDTO.setId(id);
 		return this.carService.updateCar(carDTO);
 	}
