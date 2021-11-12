@@ -84,6 +84,7 @@ public class CarService {
         return res;
     }
 
+    @Transactional
     public Response<CarDTO> updateCar(CarDTO carDTO) throws ParseException {
 
         Response<CarDTO> res = new Response<>();
