@@ -1,29 +1,30 @@
 package it.si2001.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import it.si2001.controller.UserRestController;
+import it.si2001.dao.ReservationRepository;
+import it.si2001.dao.UserRepository;
+import it.si2001.dto.Response;
+import it.si2001.dto.UserDTO;
+import it.si2001.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import it.si2001.controller.UserRestController;
-import it.si2001.dao.UserRepository;
-import it.si2001.dto.Response;
-import it.si2001.dto.UserDTO;
-import it.si2001.entity.User;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
 
-	private static Logger log = LoggerFactory.getLogger(UserRestController.class);
+	private static final Logger log = LoggerFactory.getLogger(UserRestController.class);
 
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+	private final ReservationRepository reservationRepository;
 
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, ReservationRepository reservationRepository) {
 		this.userRepository=userRepository;
+		this.reservationRepository=reservationRepository;
 	}
 
 	final static String error = "Nessun User trovato.";
@@ -31,7 +32,7 @@ public class UserService {
 
 	public Response<UserDTO> createUser(UserDTO User) {
 
-		Response<UserDTO> response = new Response<UserDTO>();
+		Response<UserDTO> response = new Response<>();
 		User u = new User();
 		u.setEmail(User.getEmail());
 		u.setFirstName(User.getFirstName());
@@ -63,16 +64,18 @@ public class UserService {
 	// delete
 	public Response<String> deleteUserById(int id) {
 
-		Response<String> response = new Response<String>();
+		Response<String> response = new Response<>();
 
 		try {
 			this.userRepository.deleteById(id);
-
-			response.setResult("User eliminato.");
+			if(this.reservationRepository.findByUserId(id).size()>0){
+				this.reservationRepository.deleteAllByUserId(id);
+			}
+			response.setResult("User e prenotazioni eliminate.");
 			response.setResultTest(true);
 
 		} catch (Exception e) {
-			response.setError("User non eliminato correttamente.");
+			response.setError("User e prenotazioni non eliminate correttamente.");
 		}
 		return response;
 	}
@@ -80,17 +83,14 @@ public class UserService {
 	// findAll
 	public Response<List<UserDTO>> findAllUsers() {
 
-		Response<List<UserDTO>> response = new Response<List<UserDTO>>();
+		Response<List<UserDTO>> response = new Response<>();
 
 		List<UserDTO> result = new ArrayList<>();
 
 		try {
 
-			Iterator<User> iterator = this.userRepository.findAll().iterator();
+			for (User user : this.userRepository.findAll()) {
 
-			while (iterator.hasNext()) {
-
-				User user = iterator.next();
 				result.add(UserDTO.build(user));
 
 			}
@@ -111,7 +111,7 @@ public class UserService {
 	// find User by id
 	public Response<UserDTO> findUserById(int id) {
 
-		Response<UserDTO> response = new Response<UserDTO>();
+		Response<UserDTO> response = new Response<>();
 
 		try {
 
@@ -135,17 +135,14 @@ public class UserService {
 	public boolean checkEmail(String email) {
 
 		boolean isEmailFound = false;
-		Response<List<UserDTO>> response = new Response<List<UserDTO>>();
+		Response<List<UserDTO>> response = new Response<>();
 
 		List<UserDTO> result = new ArrayList<>();
 
 		try {
 
-			Iterator<User> iterator = this.userRepository.findAll().iterator();
+			for (it.si2001.entity.User User : this.userRepository.findAll()) {
 
-			while (iterator.hasNext()) {
-
-				User User = iterator.next();
 				if (User.getEmail().equals(email)) {
 					isEmailFound = true;
 				}

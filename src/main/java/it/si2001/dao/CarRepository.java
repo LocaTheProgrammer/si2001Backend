@@ -16,7 +16,7 @@ public interface CarRepository extends JpaRepository<Car, Integer> {
             "(SELECT r.id FROM Reservation r " +
             "WHERE (?1 < r.to_date AND ?2 >= r.from_date " +
                     "OR ?2 > r.from_date AND ?2 <= r.to_date " +
-                    "OR ?1 < r.from_date AND ?2 > r.to_date))",nativeQuery = true)
+                    "OR ?1 < r.from_date AND ?2 > r.to_date) AND is_approved=true)",nativeQuery = true)
     List<Car> findReservationBusyInPeriod(String fromDate, String ToDate);
 
 

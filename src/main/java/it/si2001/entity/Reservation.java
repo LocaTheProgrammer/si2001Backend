@@ -33,14 +33,14 @@ public class Reservation {
     private Date toDate;
 
     @Column(name="isApproved")
-    private boolean isApproved;
+    private int isApproved;
 
-    public boolean isApproved() {
+    public int getIsApproved() {
         return isApproved;
     }
 
-    public void setApproved(boolean approved) {
-        isApproved = approved;
+    public void setIsApproved(int isApproved) {
+        this.isApproved = isApproved;
     }
 
     public int getId() {

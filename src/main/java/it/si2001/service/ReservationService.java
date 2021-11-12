@@ -40,7 +40,7 @@ public class ReservationService {
 
         Reservation reservation = this.entityDTOConverter.reservationDtoToReservationEntity(reservationDTO);
         Response<ReservationDTO> response = new Response<>();
-        reservation.setApproved(false);
+        reservation.setIsApproved(0);
 
 
         try {
@@ -174,7 +174,7 @@ public class ReservationService {
 
         Reservation reservation=reservationRepository.findById(id).get();
 
-        reservation.setApproved(true);
+        reservation.setIsApproved(1);
 
         this.reservationRepository.save(reservation);
 

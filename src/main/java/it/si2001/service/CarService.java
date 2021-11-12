@@ -68,6 +68,9 @@ public class CarService {
         Response<Boolean> res =new Response<>();
         try {
             this.carRepository.delete(this.carRepository.findById(id).get());
+            if (this.reservationRepository.findAllByCarId(id).size()>0){
+                this.reservationRepository.deleteAllByCarId(id);
+            }
             res.setResult(true);
             return res;
         } catch (Exception e) {
