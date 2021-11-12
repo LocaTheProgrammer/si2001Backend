@@ -12,10 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 public class ReservationService {
@@ -23,7 +21,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final CarRepository carRepository;
     private final UserRepository userRepository;
-    private EntityDTOConverter entityDTOConverter;
+    private final EntityDTOConverter entityDTOConverter;
 
 
     public ReservationService(ReservationRepository reservationRepository, CarRepository carRepository, UserRepository userRepository, EntityDTOConverter entityDTOConverter) {
@@ -35,7 +33,7 @@ public class ReservationService {
 
     private static final Logger log = LoggerFactory.getLogger(ReservationService.class);
 
-
+    @Transactional
     public Response<ReservationDTO> createReservation(ReservationDTO reservationDTO) {
 
         Reservation reservation = this.entityDTOConverter.reservationDtoToReservationEntity(reservationDTO);
@@ -56,40 +54,44 @@ public class ReservationService {
 
     public List<ReservationDTO> findAllReservations() {
 
-        Response<List<ReservationDTO>> response;
-        response = new Response<>();
         List<ReservationDTO> result = new ArrayList<>();
 
         for (Reservation r : this.reservationRepository.findAll()) {
             result.add(ReservationDTO.build(r));
         }
-        response.setResult(result);
-        if (result != null) {
-            response.setResultTest(true);
-        } else {
-            response.setResultTest(false);
-        }
+
+
         return result;
     }
 
+    @Transactional
     public boolean deleteReservationById(int id) {
         try {
-            this.reservationRepository.delete(this.reservationRepository.findById(id).get());
+            Optional<Reservation> r = this.reservationRepository.findById(id);
+            if(r.isPresent()){
+                this.reservationRepository.delete(this.reservationRepository.findById(id).get());
+            }
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
+
     public Response<ReservationDTO> getReservationById(int id) {
 
         Response<ReservationDTO> res = new Response<>();
 
         try {
-            Reservation r;
-            r = this.reservationRepository.findById(id).get();
-            res.setResult(ReservationDTO.build(r));
-            res.setResultTest(true);
+            Optional<Reservation> r;
+
+            r = this.reservationRepository.findById(id);
+
+            if (r.isPresent()){
+                res.setResult(ReservationDTO.build(r.get()));
+                res.setResultTest(true);
+            }
+
         } catch (Exception e) {
             res.setError("no reservation found for id: " + id);
         }
@@ -98,42 +100,56 @@ public class ReservationService {
     }
 
 
-    //todo da riscrivere tutto
     public List<ReservationTableDTO> findReservationByUserId(int userId) {
 
         List<ReservationDTO> reservationDTO = new ArrayList<>();
         List<Reservation> reservationList = this.reservationRepository.findByUserId(userId);
-        User u = this.userRepository.findById(userId).get();
+
+        Optional<User> u = this.userRepository.findById(userId);
         List<CarDTO> carDTOListReserved=new ArrayList<>();
 
-        for (Reservation reservation : reservationList) {
-            reservation.setUser(u);
-            reservationDTO.add(this.entityDTOConverter.reservationEntityToReservationDTO(reservation));
+        if (u.isPresent()){
+            for (Reservation reservation : reservationList) {
+                reservation.setUser(u.get());
+                reservationDTO.add(this.entityDTOConverter.reservationEntityToReservationDTO(reservation));
+            }
+            for (ReservationDTO dto : reservationDTO) {
+                int id=dto.getCarId();
+                log.info("car id: "+id);
+                Optional<Car> c = this.carRepository.findById(id);
+
+                if (c.isPresent()){
+                    carDTOListReserved.add(CarDTO.build(c.get()));
+                }
+
+            }
         }
-        for (ReservationDTO dto : reservationDTO) {
-            int id=dto.getCarId();
-            log.info("car id: "+id);
-            Car c = this.carRepository.findById(id).get();
-            carDTOListReserved.add(CarDTO.build(c));
-        }
+
 
         return  getReservationTableDTOList(reservationDTO, carDTOListReserved);
     }
 
 
     public ReservationTableDTO findCarByReservationId(int id) {
-        Reservation r = this.reservationRepository.findById(id).get();
-        Car c = this.carRepository.findById(r.getCar().getId()).get();
+
+        Optional<Reservation> r = this.reservationRepository.findById(id);
+        if (r.isPresent()){
+        Car c = r.get().getCar();
         CarDTO carDTO = CarDTO.build(c);
         ReservationTableDTO ret = new ReservationTableDTO();
 
-        ret.setId(r.getId());
-        ret.setCar(carDTO);
-        ret.setFromDate(r.getFromDate());
-        ret.setToDate(r.getToDate());
-        ret.setUserId(1);
 
-        return ret;
+            ret.setId(r.get().getId());
+            ret.setCar(carDTO);
+            ret.setFromDate(r.get().getFromDate());
+            ret.setToDate(r.get().getToDate());
+            ret.setUserId(1);
+            return ret;
+        }else{
+            return null;
+        }
+
+
     }
 
 
@@ -175,6 +191,7 @@ public class ReservationService {
         return ret;
     }
 
+    @Transactional
     public Response<ReservationDTO> approveReservation(int id) {
 
         Reservation reservation=reservationRepository.findById(id).get();
