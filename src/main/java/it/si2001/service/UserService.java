@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class UserService {
 
 	final static String error = "Nessun User trovato.";
 
-
+	@Transactional
 	public Response<UserDTO> createUser(UserDTO User) {
 
 		Response<UserDTO> response = new Response<>();
@@ -63,15 +64,13 @@ public class UserService {
 	}
 
 	// delete
+	@Transactional
 	public Response<String> deleteUserById(int id) {
 
 		Response<String> response = new Response<>();
 
 		try {
 			this.userRepository.deleteById(id);
-			if(this.reservationRepository.findByUserId(id).size()>0){
-				this.reservationRepository.deleteAllByUserId(id);
-			}
 			response.setResult("User e prenotazioni eliminate.");
 			response.setResultTest(true);
 
@@ -91,9 +90,7 @@ public class UserService {
 		try {
 
 			for (User user : this.userRepository.findAll()) {
-
 				result.add(UserDTO.build(user));
-
 			}
 
 			response.setResult(result);
