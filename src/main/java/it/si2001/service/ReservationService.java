@@ -104,15 +104,20 @@ public class ReservationService {
         List<ReservationDTO> reservationDTO = new ArrayList<>();
         List<Reservation> reservationList = this.reservationRepository.findByUserId(userId);
         User u = this.userRepository.findById(userId).get();
-        UserDTO userDTO = UserDTO.build(u);
+        List<CarDTO> carDTOListReserved=new ArrayList<>();
 
-        for (int i = 0; i < reservationList.size(); i++) {
-            reservationList.get(i).setUser(u);
-
+        for (Reservation reservation : reservationList) {
+            reservation.setUser(u);
+            reservationDTO.add(this.entityDTOConverter.reservationEntityToReservationDTO(reservation));
+        }
+        for (ReservationDTO dto : reservationDTO) {
+            int id=dto.getCarId();
+            log.info("car id: "+id);
+            Car c = this.carRepository.findById(id).get();
+            carDTOListReserved.add(CarDTO.build(c));
         }
 
-
-        return null;//todo da cambiare
+        return  getReservationTableDTOList(reservationDTO, carDTOListReserved);
     }
 
 

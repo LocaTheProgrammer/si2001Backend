@@ -1,6 +1,5 @@
 package it.si2001.converter;
 
-import it.si2001.controller.CarRestController;
 import it.si2001.dao.CarRepository;
 import it.si2001.dao.ReservationRepository;
 import it.si2001.dao.UserRepository;
