@@ -83,9 +83,7 @@ public class ReservationService {
         Response<ReservationDTO> res = new Response<>();
 
         try {
-            Optional<Reservation> r;
-
-            r = this.reservationRepository.findById(id);
+            Optional<Reservation> r = this.reservationRepository.findById(id);
 
             if (r.isPresent()){
                 res.setResult(ReservationDTO.build(r.get()));

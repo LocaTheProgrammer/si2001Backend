@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -115,10 +116,12 @@ public class UserService {
 
 		try {
 
-			User User = this.userRepository.findById(id).get();
+			Optional<User> user = this.userRepository.findById(id);
+			if (user.isPresent()){
+				response.setResult(UserDTO.build(user.get()));
+				response.setResultTest(true);
 
-			response.setResult(UserDTO.build(User));
-			response.setResultTest(true);
+			}
 
 		} catch (Exception e) {
 
@@ -133,32 +136,8 @@ public class UserService {
 
 
 	public boolean checkEmail(String email) {
-
-		boolean isEmailFound = false;
-		Response<List<UserDTO>> response = new Response<>();
-
-		List<UserDTO> result = new ArrayList<>();
-
-		try {
-
-			for (it.si2001.entity.User User : this.userRepository.findAll()) {
-
-				if (User.getEmail().equals(email)) {
-					isEmailFound = true;
-				}
-
-			}
-
-			response.setResult(result);
-			response.setResultTest(true);
-
-		} catch (Exception e) {
-
-			response.setError(error);
-
-		}
-
-		return isEmailFound;
+		User u= this.userRepository.findByEmail(email);
+		return u == null;
 
 	}
 
@@ -171,7 +150,7 @@ public class UserService {
 			User user = this.userRepository.findByEmail(email);
 
 
-			if (BCrypt.checkpw(password, user.getPassword())) { //non va
+			if (BCrypt.checkpw(password, user.getPassword())) {
 				response= UserDTO.build(user);
 				log.info(response.getFirstName());
 			}
