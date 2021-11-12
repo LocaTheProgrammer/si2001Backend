@@ -44,7 +44,8 @@ public class Car {
     private String origin;
 
 
-    @OneToMany(mappedBy = "car",  orphanRemoval = true) //cascade = CascadeType.REMOVE v
+
+    @OneToMany(mappedBy = "car",  orphanRemoval = true, fetch = FetchType.LAZY) //cascade = CascadeType.REMOVE v
     List<Reservation> reservationList;
 
     public List<Reservation> getReservationList() {
@@ -134,6 +135,7 @@ public class Car {
     public void setWeightInLbs(String weightInLbs) {
         this.weightInLbs = weightInLbs;
     }
+
 
     @Override
     public String toString() {

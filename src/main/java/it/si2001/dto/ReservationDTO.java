@@ -12,6 +12,9 @@ public class ReservationDTO {
     private int carId;
     private Date fromDate;
     private Date toDate;
+    private boolean isApproved;
+
+
 
 
     public static ReservationDTO build(Reservation r){
@@ -61,6 +64,13 @@ public class ReservationDTO {
         this.toDate = toDate;
     }
 
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
 
     @Override
     public String toString() {

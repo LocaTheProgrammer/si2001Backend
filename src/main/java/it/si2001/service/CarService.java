@@ -156,19 +156,19 @@ public class CarService {
 
     public List<CarDTO> getFreeCarByReservationDate(NgbDateDTO fromDate, NgbDateDTO toDate) throws ParseException {
 
-        List<ReservationDTO> reservationDTOList = new ArrayList<>();
-
+        List<Reservation> reservation = new ArrayList<>();
+        reservation=this.reservationRepository.findAll();
         List<CarDTO> carDTOList = this.findAllCars();
-        if (reservationDTOList.size() == 0) {
+        if (reservation.size() == 0) {
             return carDTOList;
         } else {
             List<CarDTO> availableCarList = new ArrayList<>();
-            int fromMonth = fromDate.getMonth() - 1;
-            int toMonth = toDate.getMonth() - 1;
-            String dateFromS = fromDate.getYear() + "/" + fromMonth + "/" + fromDate.getDay();
-            String dateToS = toDate.getYear() + "/" + toMonth + "/" + toDate.getDay();
+            int fromMonth = fromDate.getMonth();
+            int toMonth = toDate.getMonth();
+            String dateFromS = fromDate.getYear() + "-" + fromMonth + "-" + fromDate.getDay();
+            String dateToS = toDate.getYear() + "-" + toMonth + "-" + toDate.getDay();
 
-            String pattern = "yyyy/MM/dd";
+            String pattern = "yyyy-MM-dd";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             Date from = new Date();
             Date to = new Date();
@@ -191,9 +191,14 @@ public class CarService {
                 e.printStackTrace();
             }
 
-//            List<Reservation>reservationList=this.reservationRepository.findByToDateBeforeAndFromDateAfter(to,from);
-            List<Reservation> reservationList = this.reservationRepository.findAll();
-            log.info("sasd");
+            String fromStringed=simpleDateFormat.format(from);
+            String toStringed=simpleDateFormat.format(to);
+           List<Car> freeCarList=this.carRepository.findReservationBusyInPeriod(fromStringed,toStringed);
+            log.info("freeCarList: "+Arrays.toString(freeCarList.toArray()));
+            for (Car car : freeCarList) {
+                CarDTO cDTO = this.entityDTOConverter.carEntityToCarDTO(car);
+                availableCarList.add(cDTO);
+            }
             return availableCarList;
         }
     }

@@ -73,5 +73,11 @@ public class ReservationRestController {
         return response;
     }
 
+    @PutMapping(path="/approveReservation/{id}")
+    public Response<ReservationDTO> approveReservation(@PathVariable int id){
+        log.info("received request approve reservation");
+        return this.reservationService.approveReservation(id);
+    }
+
 
 }
