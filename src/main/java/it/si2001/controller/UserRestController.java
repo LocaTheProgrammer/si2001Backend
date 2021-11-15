@@ -52,7 +52,7 @@ public class UserRestController {
 	@PutMapping(path="/update")
 	public Response<?> updateUser(@RequestBody UserDTO u){
 		log.info("Ricevuta richiesta della update User");
-		return userService.updateUser(u);
+		return userService.createUser(u);
 	}
 	
 	@GetMapping(path = "/findAll")

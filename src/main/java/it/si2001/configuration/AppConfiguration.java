@@ -49,8 +49,4 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
     }
 
 
-//    @Bean
-//    public EntityDTOConverter entityDTOConverter(UserRepository userRepository, CarRepository carRepository, ReservationRepository reservationRepository){
-//        return new EntityDTOConverter(userRepository, carRepository, reservationRepository);
-//    }
 }

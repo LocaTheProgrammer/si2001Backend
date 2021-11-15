@@ -47,7 +47,7 @@ public class CarRestController {
 	@PutMapping(path="/updateCar")
 	public Response<CarDTO> updateCar(@RequestBody CarDTO carDTO) throws ParseException {
 		log.info("car dto: "+carDTO);
-		return this.carService.updateCar(carDTO);
+		return this.carService.createCar(carDTO);
 	}
 
 	@DeleteMapping(path="/deleteCarById/{id}")

@@ -28,7 +28,7 @@ public class User {
 	@Column(name="role")
 	private String role;
 
-	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY) //per rimuovere la prenotazione in caso l'utente fosse eliminato -!- chiedere a manuel differenza cascade = CascadeType.REMOVE,
+	@OneToMany(mappedBy = "user", cascade=CascadeType.REMOVE, fetch = FetchType.LAZY) //per rimuovere la prenotazione in caso l'utente fosse eliminato -!- chiedere a manuel differenza cascade = CascadeType.REMOVE,
 	List<Reservation> reservationList;
 
 	public List<Reservation> getReservationList() {

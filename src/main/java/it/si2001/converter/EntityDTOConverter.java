@@ -49,6 +49,7 @@ public class EntityDTOConverter {
 
         Date carDate=simpleDateFormat.parse(carDTO.getYear());
 
+        c.setId(carDTO.getId());
         c.setCylinders(carDTO.getCylinders());
         c.setYear(carDate);
         c.setDisplacement(carDTO.getDisplacement());
