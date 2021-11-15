@@ -28,8 +28,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
-
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 
 public class AppConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
@@ -66,10 +65,11 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.cors().and().csrf().disable()
                 // dont authenticate this particular request
-                .authorizeRequests().antMatchers("/authenticate").permitAll().antMatchers("/rest/user/logIn").
-                permitAll().antMatchers(HttpMethod.DELETE, "/rest/car/deleteCarById/{id}").hasRole(Roles.ADMIN.name()).
+                .authorizeRequests()
+                .antMatchers("/rentalCar/rest/car/deleteCarById/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/authenticate").permitAll().antMatchers("/rest/user/logIn").permitAll().
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
@@ -94,43 +94,6 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
         return authenticationManager();
     }
 
-    // Setting up the details of the application users with their respective usernames, roles and passwords.
-    @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
-        UserDetails timmy = User.builder()
-                .username("timmy")
-                .password(BCrypt.hashpw("password", BCrypt.gensalt()))
-                .roles(Roles.INTERN.name())
-                .build();
-
-        UserDetails john = User.builder()
-                .username("john")
-                .password(BCrypt.hashpw("password", BCrypt.gensalt()))
-                .roles(Roles.SUPERVISOR.name())
-                .build();
-
-        UserDetails sarah = User.builder()
-                .username("sarah")
-                .password(BCrypt.hashpw("password", BCrypt.gensalt()))
-                .roles(Roles.ADMIN.name())
-                .build();
-
-        InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager(timmy, john, sarah);
-
-        return userDetailsManager;
-
-    }
-    public enum Roles {
-
-        INTERN,
-
-        SUPERVISOR,
-
-        ADMIN;
-
-
-    }
 
 
 }
