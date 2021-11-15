@@ -33,7 +33,7 @@ public class CarService {
 
     private static final Logger log = LoggerFactory.getLogger(CarRestController.class);
 
-
+    @Transactional
     public Response<CarDTO> createCar(CarDTO carDTO) throws ParseException {
 
         Response<CarDTO> res = new Response<>();

@@ -163,6 +163,7 @@ public class UserService {
 	}
 
 	// update User
+	@Transactional
 	public Response<UserDTO> updateUser(UserDTO u) {
 
 		Response<UserDTO> response = new Response<>();
