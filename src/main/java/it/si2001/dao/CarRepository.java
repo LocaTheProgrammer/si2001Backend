@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import it.si2001.entity.Car;
 
-import java.util.Date;
 import java.util.List;
 
 @Repository
