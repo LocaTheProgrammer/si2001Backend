@@ -1,6 +1,5 @@
 package it.si2001.controller;
 
-import it.si2001.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.si2001.dto.CredentialsDTO;
+import it.si2001.dto.JwtRequest;
 import it.si2001.dto.Response;
 import it.si2001.dto.UserDTO;
 import it.si2001.service.UserService;
@@ -62,9 +61,9 @@ public class UserRestController {
 	}
 	
 	@PostMapping(path="/logIn")
-	public Response<?> signIn(@RequestBody CredentialsDTO credentials){
+	public Response<?> signIn(@RequestBody JwtRequest credentials){
 		log.info("richiesta di logIn");
-		UserDTO userDTO=userService.loginUser(credentials.getMail(), credentials.getPassword());
+		UserDTO userDTO=userService.loginUser(credentials.getUsername(), credentials.getPassword());
 		Response<UserDTO> response=new Response<>();
 		response.setResult(userDTO);
 		return response;

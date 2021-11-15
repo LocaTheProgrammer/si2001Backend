@@ -1,16 +1,16 @@
 package it.si2001.dto;
 
-public class CredentialsDTO {
+public class JwtRequest {
 	
-	public String mail;
+	public String username;
 	public String password;
 
-	public String getMail() {
-		return mail;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setMail(String mail) {
-		this.mail = mail;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
