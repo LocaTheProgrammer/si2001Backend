@@ -124,7 +124,6 @@ public class EntityDTOConverter {
         u.setEmail(userDTO.getEmail());
         u.setId(userDTO.getId());
         u.setFirstName(userDTO.getFirstName());
-        u.setPassword(userDTO.getPassword());
         u.setLastName(userDTO.getLastName());
         u.setRole(userDTO.getRole());
 
@@ -133,17 +132,16 @@ public class EntityDTOConverter {
     }
 
     public UserDTO userEntityToUserDTO(User user){
-        UserDTO u = new UserDTO();
+        UserDTO uDTO = new UserDTO();
 
-//        u.setIdReservationList(user.getReservationList());
-        u.setEmail(user.getEmail());
-        u.setId(user.getId());
-        u.setFirstName(user.getFirstName());
-        u.setPassword(user.getPassword());
-        u.setLastName(user.getLastName());
-        u.setRole(user.getRole());
+        uDTO.setEmail(user.getEmail());
+        uDTO.setId(user.getId());
+        uDTO.setFirstName(user.getFirstName());
+        uDTO.setPassword(user.getPassword());
+        uDTO.setLastName(user.getLastName());
+        uDTO.setRole(user.getRole());
 
-        return u;
+        return uDTO;
     }
 
 

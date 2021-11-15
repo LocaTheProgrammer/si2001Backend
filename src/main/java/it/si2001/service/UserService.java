@@ -1,6 +1,7 @@
 package it.si2001.service;
 
 import it.si2001.controller.UserRestController;
+import it.si2001.converter.EntityDTOConverter;
 import it.si2001.dao.ReservationRepository;
 import it.si2001.dao.UserRepository;
 import it.si2001.dto.Response;
@@ -23,30 +24,32 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final ReservationRepository reservationRepository;
+	private final EntityDTOConverter entityDTOConverter;
 
-	public UserService(UserRepository userRepository, ReservationRepository reservationRepository) {
+	public UserService(UserRepository userRepository, ReservationRepository reservationRepository, EntityDTOConverter entityDTOConverter) {
 		this.userRepository=userRepository;
 		this.reservationRepository=reservationRepository;
+		this.entityDTOConverter=entityDTOConverter;
 	}
 
 	final static String error = "Nessun User trovato.";
 
 	@Transactional
-	public Response<UserDTO> createUser(UserDTO User) {
+	public Response<UserDTO> createUser(UserDTO user) {
 
 		Response<UserDTO> response = new Response<>();
-		User u = new User();
-		u.setEmail(User.getEmail());
-		u.setFirstName(User.getFirstName());
-		u.setLastName(User.getLastName());
-		u.setPassword(BCrypt.hashpw(User.getPassword(), BCrypt.gensalt())); // per cifrare
-		u.setRole(User.getRole());
+
+
+		User u = this.entityDTOConverter.userDtoToUserEntity(user);
+
+		u.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt())); // per cifrare
+		u.setRole(user.getRole());
 
 		try {
-			if (!this.checkEmail(User.getEmail())) {
+			if (!this.checkEmail(user.getEmail(),user.getId())) {
 
 				this.userRepository.save(u);
-				response.setResult(User);
+				response.setResult(user);
 				response.setResultTest(true);
 			} else {
 				response.setError("User non creato");
@@ -132,9 +135,23 @@ public class UserService {
 
 
 
-	public boolean checkEmail(String email) {
-		User u= this.userRepository.findByEmail(email);
-		return u == null;
+	public boolean checkEmail(String email, int id) {
+		Optional<User> u= this.userRepository.findByEmail(email);
+		if(u.isPresent()){
+			if(u.get().getId()!=id){
+				log.info("user not present");
+				return true;
+			}else{
+				return false;
+			}
+
+		}
+
+		else{
+			log.info("user present");
+			return false;
+		}
+
 
 	}
 
@@ -144,7 +161,7 @@ public class UserService {
 
 		try {
 
-			User user = this.userRepository.findByEmail(email);
+			User user = this.userRepository.findByEmail(email).get();
 
 
 			if (BCrypt.checkpw(password, user.getPassword())) {
@@ -162,37 +179,37 @@ public class UserService {
 
 	}
 
-	// update User
-	@Transactional
-	public Response<UserDTO> updateUser(UserDTO u) {
-
-		Response<UserDTO> response = new Response<>();
-		try {
-			User user = this.userRepository.findByEmail(u.getEmail());
-
-			if (u.getFirstName() != null)
-				user.setFirstName(u.getFirstName());
-
-			if (u.getLastName() != null)
-				user.setLastName(u.getLastName());
-
-			if (u.getEmail() != null)
-				user.setEmail(u.getEmail());
-
-			if (u.getPassword() != null)
-				user.setPassword(u.getPassword());
-
-			this.userRepository.save(user);
-
-			response.setResult(UserDTO.build(user));
-			response.setResultTest(true);
-
-		} catch (Exception e) {
-
-			response.setError(error);
-
-		}
-
-		return response;
-	}
+//	// update User
+//	@Transactional
+//	public Response<UserDTO> updateUser(UserDTO u) {
+//
+//		Response<UserDTO> response = new Response<>();
+//		try {
+//			User user = this.userRepository.findByEmail(u.getEmail());
+//
+//			if (u.getFirstName() != null)
+//				user.setFirstName(u.getFirstName());
+//
+//			if (u.getLastName() != null)
+//				user.setLastName(u.getLastName());
+//
+//			if (u.getEmail() != null)
+//				user.setEmail(u.getEmail());
+//
+//			if (u.getPassword() != null)
+//				user.setPassword(u.getPassword());
+//
+//			this.userRepository.save(user);
+//
+//			response.setResult(UserDTO.build(user));
+//			response.setResultTest(true);
+//
+//		} catch (Exception e) {
+//
+//			response.setError(error);
+//
+//		}
+//
+//		return response;
+//	}
 }

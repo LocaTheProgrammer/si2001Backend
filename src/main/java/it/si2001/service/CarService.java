@@ -40,19 +40,9 @@ public class CarService {
 
         Car car = this.entityDTOConverter.carDtoToCarEntity(carDTO);
 
-        Optional<Car> carToSaveOPT= this.carRepository.findById(carDTO.getId());
-
-        if(carToSaveOPT.isPresent()){
-            this.carRepository.save(car);
-            res.setResult(carDTO);
-            res.setResultTest(true);
-        }else{
-            this.carRepository.save(car);
-            res.setResult(carDTO);
-            res.setResultTest(true);
-        }
-
-
+        this.carRepository.save(car);
+        res.setResult(carDTO);
+        res.setResultTest(true);
 
         return res;
 
