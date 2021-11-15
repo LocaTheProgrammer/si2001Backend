@@ -3,7 +3,7 @@ package it.si2001.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.jaas.memory.InMemoryConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,11 +37,11 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 		http
-		.csrf().disable()
-		.authorizeRequests()
-		.antMatchers().permitAll()//end point senza controllo di nessun tipo, quindi accessibile ad ogni client
-		.anyRequest().permitAll()
-		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		.authorizeRequests().antMatchers("/login").permitAll()
+		.antMatchers(ADMIN_CAR_MATCHER).access("hasRole('ADMIN')")
+		.and().formLogin().loginProcessingUrl("/login").usernameParameter("userId").passwordParameter("password");
+//		.and().exceptionHandling().accessDeniedPage("/login/form?forbidden")
+//		.and().logout().logoutUrl("/login/form?logout");
 
 	}
     @Override
@@ -72,8 +72,14 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
     	return manager;
     }
     
+    @Override
+    public void configure(final AuthenticationManagerBuilder auth) throws Exception {
+    	auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+    }
     
-    
+    private static final String[] ADMIN_CAR_MATCHER= {
+    	"/rest/car/delete/**"	
+    };
 
 
 }
