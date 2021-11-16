@@ -4,6 +4,8 @@ import it.si2001.dto.NgbDateDTO;
 import it.si2001.dto.NgbDateRangeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import it.si2001.dto.CarDTO;
@@ -51,7 +53,7 @@ public class CarRestController {
 	}
 
 	@DeleteMapping(path="/deleteCarById/{id}")
-	public Response<Boolean> deleteCar(@PathVariable int id){
+	public Response<Boolean> deleteCar(@PathVariable int id, @AuthenticationPrincipal UserDetails userDetails) {
 		return this.carService.deleteCarById(id);
 	}
 
