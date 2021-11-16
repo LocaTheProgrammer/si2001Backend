@@ -53,7 +53,7 @@ public class CarRestController {
 	}
 
 	@DeleteMapping(path="/deleteCarById/{id}")
-	public Response<Boolean> deleteCar(@PathVariable int id, @AuthenticationPrincipal UserDetails userDetails) {
+	public Response<Boolean> deleteCar(@PathVariable int id) {
 		return this.carService.deleteCarById(id);
 	}
 
