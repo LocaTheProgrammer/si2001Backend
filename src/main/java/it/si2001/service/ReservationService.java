@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -34,8 +36,20 @@ public class ReservationService {
     private static final Logger log = LoggerFactory.getLogger(ReservationService.class);
 
     @Transactional
-    public Response<ReservationDTO> createReservation(ReservationDTO reservationDTO) {
+    public Response<ReservationDTO> createReservation(ReservationDTO reservationDTO) throws ParseException {
+        String[] fromDateString=EntityDTOConverter.simpleDateFormat.format(reservationDTO.getFromDate()).split("-");
+        String[] toDateString=EntityDTOConverter.simpleDateFormat.format(reservationDTO.getToDate()).split("-");
 
+        int fromMonth=Integer.parseInt(fromDateString[1])+1;
+        int toMonth=Integer.parseInt(toDateString[1])+1;
+
+        String fromDateCorrect=fromDateString[0]+"-"+fromMonth+"-"+fromDateString[2];
+        String toDateCorrect=toDateString[0]+"-"+toMonth+"-"+toDateString[2];
+
+        Date fromDateCorrectDate = EntityDTOConverter.simpleDateFormat.parse(fromDateCorrect);
+        Date toDateCorrectDate = EntityDTOConverter.simpleDateFormat.parse(toDateCorrect);
+        reservationDTO.setFromDate(fromDateCorrectDate);
+        reservationDTO.setToDate(toDateCorrectDate);
         Reservation reservation = this.entityDTOConverter.reservationDtoToReservationEntity(reservationDTO);
         Response<ReservationDTO> response = new Response<>();
         reservation.setIsApproved(0);
@@ -154,13 +168,16 @@ public class ReservationService {
     public List<ReservationTableDTO> findReservationTable() {
 
         List<ReservationDTO> reservationDTO = new ArrayList<>();
-        Iterator<Reservation> iterator = this.reservationRepository.findAll().iterator();
+        List<Reservation> reservationList = this.reservationRepository.findAll();
         List<CarDTO> carDTOListReserved = new ArrayList<>();
 
-        while (iterator.hasNext()) {
-            Reservation r = iterator.next();
-            reservationDTO.add(ReservationDTO.build(r));
+       ReservationDTO singleReservationDTO;
+        for (Reservation reservation : reservationList) {
+
+            singleReservationDTO = this.entityDTOConverter.reservationEntityToReservationDTO(reservation);
+            reservationDTO.add(singleReservationDTO);
         }
+
         log.info("reservationDTO: " + Arrays.toString(reservationDTO.toArray()));
 
 

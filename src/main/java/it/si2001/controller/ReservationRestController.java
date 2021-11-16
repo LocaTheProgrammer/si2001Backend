@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class ReservationRestController {
     private static Logger log = LoggerFactory.getLogger(ReservationRestController.class);
 
     @PostMapping(path = "/create")
-    public Response<ReservationDTO> createReservation(@RequestBody ReservationDTO res){
+    public Response<ReservationDTO> createReservation(@RequestBody ReservationDTO res) throws ParseException {
         log.info("ricevuta richiesta creazione prenotazione");
         return this.reservationService.createReservation(res);
     }
@@ -73,7 +74,7 @@ public class ReservationRestController {
         return response;
     }
 
-    @PutMapping(path="/approveReservation/{id}")
+    @GetMapping(path="/approveReservation/{id}")
     public Response<ReservationDTO> approveReservation(@PathVariable int id){
         log.info("received request approve reservation");
         return this.reservationService.approveReservation(id);

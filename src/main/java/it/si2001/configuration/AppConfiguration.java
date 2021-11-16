@@ -56,6 +56,7 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
         http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/authenticate").permitAll()
+                .antMatchers("/rest/car/findAll").permitAll()
                 .antMatchers("/rest/user/logIn").permitAll()
                 .antMatchers("/rest/car/deleteCarById/**").hasAuthority("ADMIN").anyRequest().authenticated()
                 .and()
@@ -70,6 +71,8 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/rest/car/**").allowedMethods("GET", "POST", "PUT", "DELETE");
+        registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE");
+        registry.addMapping("/authenticate").allowedMethods("GET", "POST", "PUT", "DELETE");
         registry.addMapping("/rest/**").allowedMethods("GET", "POST", "PUT", "DELETE");
         registry.addMapping("/rest/user/**").allowedMethods("GET", "POST", "PUT", "DELETE");
         registry.addMapping("/rest/reservation/**").allowedMethods("GET", "POST", "PUT", "DELETE");
