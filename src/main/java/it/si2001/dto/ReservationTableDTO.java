@@ -9,7 +9,7 @@ public class ReservationTableDTO {
 
     private int id;
     private int userId;
-    private CarDTO car;
+    private String name;
     private Date fromDate;
     private Date toDate;
     private int isApproved;
@@ -41,6 +41,14 @@ public class ReservationTableDTO {
         this.userId = userId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Date getFromDate() {
         return fromDate;
     }
@@ -57,14 +65,6 @@ public class ReservationTableDTO {
         this.toDate = toDate;
     }
 
-    public CarDTO getCar() {
-        return car;
-    }
-
-    public void setCar(CarDTO car) {
-        this.car = car;
-    }
-
     public int getIsApproved() {
         return isApproved;
     }
@@ -78,9 +78,10 @@ public class ReservationTableDTO {
         return "ReservationTableDTO{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", car=" + car +
+                ", name='" + name + '\'' +
                 ", fromDate=" + fromDate +
                 ", toDate=" + toDate +
+                ", isApproved=" + isApproved +
                 '}';
     }
 }

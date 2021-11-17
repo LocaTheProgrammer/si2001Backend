@@ -154,7 +154,7 @@ public class ReservationService {
 
 
             ret.setId(r.get().getId());
-            ret.setCar(carDTO);
+            ret.setName(carDTO.getName());
             ret.setFromDate(r.get().getFromDate());
             ret.setToDate(r.get().getToDate());
             ret.setUserId(1);
@@ -202,7 +202,7 @@ public class ReservationService {
             reservationTableDTO.setToDate(reservationDTO.get(j).getToDate());
             reservationTableDTO.setUserId(reservationDTO.get(j).getUserId());
             reservationTableDTO.setId(reservationDTO.get(j).getId());
-            reservationTableDTO.setCar(carDTOListReserved.get(j));
+            reservationTableDTO.setName(this.carRepository.findById(carDTOListReserved.get(j).getId()).get().getName());
             reservationTableDTO.setIsApproved(reservationDTO.get(j).getIsApproved());
             ret.add(reservationTableDTO);
         }
