@@ -10,8 +10,8 @@ public class ReservationTableDTO {
     private int id;
     private int userId;
     private String name;
-    private Date fromDate;
-    private Date toDate;
+    private String fromDate;
+    private String toDate;
     private int isApproved;
 
 
@@ -23,7 +23,6 @@ public class ReservationTableDTO {
 
         return result;
     }
-
 
     public int getId() {
         return id;
@@ -49,19 +48,19 @@ public class ReservationTableDTO {
         this.name = name;
     }
 
-    public Date getFromDate() {
+    public String getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(String fromDate) {
         this.fromDate = fromDate;
     }
 
-    public Date getToDate() {
+    public String getToDate() {
         return toDate;
     }
 
-    public void setToDate(Date toDate) {
+    public void setToDate(String toDate) {
         this.toDate = toDate;
     }
 
@@ -79,8 +78,8 @@ public class ReservationTableDTO {
                 "id=" + id +
                 ", userId=" + userId +
                 ", name='" + name + '\'' +
-                ", fromDate=" + fromDate +
-                ", toDate=" + toDate +
+                ", fromDate='" + fromDate + '\'' +
+                ", toDate='" + toDate + '\'' +
                 ", isApproved=" + isApproved +
                 '}';
     }

@@ -155,8 +155,8 @@ public class ReservationService {
 
             ret.setId(r.get().getId());
             ret.setName(carDTO.getName());
-            ret.setFromDate(r.get().getFromDate());
-            ret.setToDate(r.get().getToDate());
+            ret.setFromDate(this.entityDTOConverter.simpleDateFormat.format(r.get().getFromDate()));
+            ret.setToDate(this.entityDTOConverter.simpleDateFormat.format(r.get().getToDate()));
             ret.setUserId(1);
             return ret;
         }else{
@@ -197,8 +197,8 @@ public class ReservationService {
 
         for (int j = 0; j < reservationDTO.size(); j++) {
             ReservationTableDTO reservationTableDTO = new ReservationTableDTO();
-            reservationTableDTO.setFromDate(reservationDTO.get(j).getFromDate());
-            reservationTableDTO.setToDate(reservationDTO.get(j).getToDate());
+            reservationTableDTO.setFromDate(this.entityDTOConverter.simpleDateFormat.format(reservationDTO.get(j).getFromDate()));
+            reservationTableDTO.setToDate(this.entityDTOConverter.simpleDateFormat.format(reservationDTO.get(j).getToDate()));
             reservationTableDTO.setUserId(reservationDTO.get(j).getUserId());
             reservationTableDTO.setId(reservationDTO.get(j).getId());
             reservationTableDTO.setName(this.carRepository.findById(carDTOListReserved.get(j).getId()).get().getName());
