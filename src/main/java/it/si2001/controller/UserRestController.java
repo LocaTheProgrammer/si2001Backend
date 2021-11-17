@@ -24,7 +24,7 @@ public class UserRestController {
 	@PostMapping(path="/create")
 	public Response<?> createUser(@RequestBody UserDTO u){
 		log.info("Ricevuta richiesta della creazion User");
-		return userService.createUser(u);
+		return userService.createUser(u,0);
 	}
 	
 	
@@ -40,10 +40,10 @@ public class UserRestController {
 		return userService.findUserById(id);
 	}
 	
-	@PutMapping(path="/update")
-	public Response<?> updateUser(@RequestBody UserDTO u){
+	@PutMapping(path="/update/{id}")
+	public Response<?> updateUser(@RequestBody UserDTO u, @PathVariable int id){
 		log.info("Ricevuta richiesta della update User");
-		return userService.createUser(u);
+		return userService.createUser(u, id);
 	}
 	
 	@GetMapping(path = "/findAll")

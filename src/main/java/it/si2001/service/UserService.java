@@ -35,26 +35,34 @@ public class UserService {
 	final static String error = "Nessun User trovato.";
 
 	@Transactional
-	public Response<UserDTO> createUser(UserDTO user) {
+	public Response<UserDTO> createUser(UserDTO user, int id) {
 
 		Response<UserDTO> response = new Response<>();
 
 
-		User u = this.entityDTOConverter.userDtoToUserEntity(user);
+		log.info(user.toString());
+
+		Optional<User> uOPT = this.userRepository.findByEmail(user.getEmail());
+		User u=new User();
+
+		if(uOPT.isPresent()){
+			u=uOPT.get();
+			user.setId(id);
+		}
 
 		u.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt())); // per cifrare
 		u.setRole(user.getRole());
 
+
+		u = this.entityDTOConverter.userDtoToUserEntity(user);
+		log.info(u.toString());
 		try {
-			if (!this.checkEmail(user.getEmail(),user.getId())) {
+
 
 				this.userRepository.save(u);
 				response.setResult(user);
 				response.setResultTest(true);
-			} else {
-				response.setError("User non creato");
 
-			}
 
 		} catch (Exception e) {
 			e.getStackTrace();
