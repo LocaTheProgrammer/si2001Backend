@@ -28,15 +28,18 @@ public class CarService {
     public CarService(CarRepository carRepository, ReservationRepository reservationRepository, EntityDTOConverter entityDTOConverter) {
         this.carRepository = carRepository;
         this.reservationRepository = reservationRepository;
-        this.entityDTOConverter=entityDTOConverter;
+        this.entityDTOConverter = entityDTOConverter;
     }
 
     private static final Logger log = LoggerFactory.getLogger(CarRestController.class);
 
     @Transactional
-    public Response<CarDTO> createCar(CarDTO carDTO) throws ParseException {
+    public Response<CarDTO> createCar(CarDTO carDTO, int id) throws ParseException {
 
         Response<CarDTO> res = new Response<>();
+        if (id != 0){
+            carDTO.setId(id);
+        }
 
         Car car = this.entityDTOConverter.carDtoToCarEntity(carDTO);
 
@@ -54,7 +57,7 @@ public class CarService {
 
         try {
             Optional<Car> c = this.carRepository.findById(id);
-            if(c.isPresent()){
+            if (c.isPresent()) {
                 res.setResult(CarDTO.build(c.get()));
                 res.setResultTest(true);
             }
@@ -68,10 +71,10 @@ public class CarService {
 
     @Transactional
     public Response<Boolean> deleteCarById(int id) {
-        Response<Boolean> res =new Response<>();
+        Response<Boolean> res = new Response<>();
         try {
             Optional<Car> c = this.carRepository.findById(id);
-            if(c.isPresent()){
+            if (c.isPresent()) {
                 this.carRepository.delete(c.get());
                 res.setResult(true);
                 return res;
@@ -89,11 +92,10 @@ public class CarService {
 
         Response<CarDTO> res = new Response<>();
 
-        Optional<Car> car =  this.carRepository.findById(carDTO.getId());
+        Optional<Car> car = this.carRepository.findById(carDTO.getId());
 
 
-
-        if (car.isPresent()){
+        if (car.isPresent()) {
             if (carDTO.getCylinders() != null) {
                 car.get().setCylinders(carDTO.getCylinders());
             }
@@ -165,7 +167,7 @@ public class CarService {
     public List<CarDTO> getFreeCarByReservationDate(NgbDateDTO fromDate, NgbDateDTO toDate) {
 
         List<Reservation> reservation;
-        reservation=this.reservationRepository.findAll();
+        reservation = this.reservationRepository.findAll();
         List<CarDTO> carDTOList = this.findAllCars();
         if (reservation.size() == 0) {
             return carDTOList;
@@ -199,10 +201,10 @@ public class CarService {
                 e.printStackTrace();
             }
 
-            String fromStringed=simpleDateFormat.format(from);
-            String toStringed=simpleDateFormat.format(to);
-           List<Car> freeCarList=this.carRepository.findReservationBusyInPeriod(fromStringed,toStringed);
-            log.info("freeCarList: "+Arrays.toString(freeCarList.toArray()));
+            String fromStringed = simpleDateFormat.format(from);
+            String toStringed = simpleDateFormat.format(to);
+            List<Car> freeCarList = this.carRepository.findReservationBusyInPeriod(fromStringed, toStringed);
+            log.info("freeCarList: " + Arrays.toString(freeCarList.toArray()));
             for (Car car : freeCarList) {
                 CarDTO cDTO = this.entityDTOConverter.carEntityToCarDTO(car);
                 availableCarList.add(cDTO);

@@ -31,7 +31,7 @@ public class CarRestController {
 	@PostMapping(path="/create")
 	public Response<CarDTO> createCar(@RequestBody CarDTO car) throws ParseException {
 		log.info(car.toString());
-		return this.carService.createCar(car);
+		return this.carService.createCar(car, 0);
 	}
 
 	@GetMapping(path="/findAll")
@@ -46,10 +46,10 @@ public class CarRestController {
 		return this.carService.findCarById(id);
 	}
 
-	@PutMapping(path="/updateCar")
-	public Response<CarDTO> updateCar(@RequestBody CarDTO carDTO) throws ParseException {
+	@PutMapping(path="/updateCar/{id}")
+	public Response<CarDTO> updateCar(@RequestBody CarDTO carDTO, @PathVariable int id) throws ParseException {
 		log.info("car dto: "+carDTO);
-		return this.carService.createCar(carDTO);
+		return this.carService.createCar(carDTO, id);
 	}
 
 	@DeleteMapping(path="/deleteCarById/{id}")

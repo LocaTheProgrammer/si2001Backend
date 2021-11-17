@@ -40,8 +40,6 @@ public class UserService {
 		Response<UserDTO> response = new Response<>();
 
 
-		log.info(user.toString());
-
 		Optional<User> uOPT = this.userRepository.findByEmail(user.getEmail());
 		User u=new User();
 
@@ -55,7 +53,7 @@ public class UserService {
 
 
 		u = this.entityDTOConverter.userDtoToUserEntity(user);
-		log.info(u.toString());
+
 		try {
 
 
