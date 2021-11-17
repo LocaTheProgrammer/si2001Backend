@@ -131,11 +131,13 @@ public class ReservationService {
                 Optional<Car> c = this.carRepository.findById(id);
 
                 if (c.isPresent()){
-                    carDTOListReserved.add(CarDTO.build(c.get()));
+                    carDTOListReserved.add(this.entityDTOConverter.carEntityToCarDTO(c.get()));
                 }
 
             }
         }
+
+        log.info("carDtoReserved: "+Arrays.toString(carDTOListReserved.toArray()));
 
 
         return  getReservationTableDTOList(reservationDTO, carDTOListReserved);
@@ -184,7 +186,7 @@ public class ReservationService {
         for (ReservationDTO dto : reservationDTO) {
             Car c;
             c = this.carRepository.findById(dto.getCarId()).get();
-            carDTOListReserved.add(CarDTO.build(c));
+            carDTOListReserved.add(this.entityDTOConverter.carEntityToCarDTO(c));
         }
 
 
@@ -193,16 +195,18 @@ public class ReservationService {
 
     private List<ReservationTableDTO> getReservationTableDTOList(List<ReservationDTO> reservationDTO, List<CarDTO> carDTOListReserved) {
         List<ReservationTableDTO> ret = new ArrayList<>();
-        ReservationTableDTO reservationTableDTO = new ReservationTableDTO();
-        log.info(Arrays.toString(carDTOListReserved.toArray()));
+
         for (int j = 0; j < reservationDTO.size(); j++) {
+            ReservationTableDTO reservationTableDTO = new ReservationTableDTO();
             reservationTableDTO.setFromDate(reservationDTO.get(j).getFromDate());
             reservationTableDTO.setToDate(reservationDTO.get(j).getToDate());
             reservationTableDTO.setUserId(reservationDTO.get(j).getUserId());
             reservationTableDTO.setId(reservationDTO.get(j).getId());
             reservationTableDTO.setCar(carDTOListReserved.get(j));
+            reservationTableDTO.setIsApproved(reservationDTO.get(j).getIsApproved());
             ret.add(reservationTableDTO);
         }
+        log.info("ret: "+ret);
         return ret;
     }
 

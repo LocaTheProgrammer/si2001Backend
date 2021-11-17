@@ -93,6 +93,7 @@ public class EntityDTOConverter {
         r.setId(reservation.getId());
         r.setToDate(reservation.getToDate());
         r.setFromDate(reservation.getFromDate());
+        r.setIsApproved(reservation.getIsApproved());
 
         return r;
     }

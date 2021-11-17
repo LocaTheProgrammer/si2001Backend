@@ -12,6 +12,9 @@ public class ReservationTableDTO {
     private CarDTO car;
     private Date fromDate;
     private Date toDate;
+    private int isApproved;
+
+
 
 
     public static ReservationDTO build(Reservation r){
@@ -60,6 +63,14 @@ public class ReservationTableDTO {
 
     public void setCar(CarDTO car) {
         this.car = car;
+    }
+
+    public int getIsApproved() {
+        return isApproved;
+    }
+
+    public void setIsApproved(int isApproved) {
+        this.isApproved = isApproved;
     }
 
     @Override

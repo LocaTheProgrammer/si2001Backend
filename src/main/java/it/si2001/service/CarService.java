@@ -148,7 +148,7 @@ public class CarService {
         List<CarDTO> result = new ArrayList<>();
 
         for (Car car : this.carRepository.findAll()) {
-            result.add(CarDTO.build(car));
+            result.add(this.entityDTOConverter.carEntityToCarDTO(car));
         }
 
 
